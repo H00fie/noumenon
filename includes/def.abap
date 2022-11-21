@@ -38,6 +38,17 @@ CLASS lcl_screen_adjuster DEFINITION.
 ENDCLASS.                    "lcl_screen_adjuster DEFINITION
 
 *----------------------------------------------------------------------*
+*       CLASS lif_category DEFINITION
+*----------------------------------------------------------------------*
+*
+*----------------------------------------------------------------------*
+CLASS lif_category DEFINITION.
+  PUBLIC SECTION.
+    METHODS: add_fact,
+             pick_random.
+ENDCLASS.                    "lif_category DEFINITION
+
+*----------------------------------------------------------------------*
 *       CLASS lcl_abap_displayer DEFINITION
 *----------------------------------------------------------------------*
 *
