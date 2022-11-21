@@ -27,7 +27,7 @@ ENDCLASS.                    "lcl_element_remover IMPLEMENTATION
 CLASS lcl_visibility_dispenser IMPLEMENTATION.
   METHOD make_all_blocks_inv.
     LOOP AT SCREEN.
-      IF screen-group1 = 'ID1' OR screen-group1 = 'ID2' OR screen-group1 = 'ID3' OR screen-group1 = 'ID4' OR screen-group1 = 'ID5'.
+      IF screen-group1 = 'ID2' OR screen-group1 = 'ID3' OR screen-group1 = 'ID4' OR screen-group1 = 'ID5'.
         screen-invisible = '1'.
         screen-input = '0'.
         MODIFY SCREEN.
@@ -35,6 +35,23 @@ CLASS lcl_visibility_dispenser IMPLEMENTATION.
     ENDLOOP.
   ENDMETHOD.                    "make_all_blocks_inv
 ENDCLASS.                    "lcl_visibility_dispenser IMPLEMENTATION
+
+
+*----------------------------------------------------------------------*
+*       CLASS lcl_screen_adjuster IMPLEMENTATION
+*----------------------------------------------------------------------*
+*
+*----------------------------------------------------------------------*
+CLASS lcl_screen_adjuster IMPLEMENTATION.
+  METHOD constructor.
+    me->lo_element_remover = i_lo_element_remover.
+    me->lo_visibility_dispenser = i_lo_visibility_dispenser.
+  ENDMETHOD.                    "make_all_blocks_inv
+
+  METHOD adjust_screen.
+    lo_element_remover->hide_onli( ).
+  ENDMETHOD.                    "adjust_screen
+ENDCLASS.                    "lcl_screen_adjuster IMPLEMENTATION
 
 *----------------------------------------------------------------------*
 *       CLASS lcl_abap_displayer IMPLEMENTATION
