@@ -35,3 +35,30 @@ CLASS lcl_visibility_dispenser IMPLEMENTATION.
     ENDLOOP.
   ENDMETHOD.                    "make_all_blocks_inv
 ENDCLASS.                    "lcl_visibility_dispenser IMPLEMENTATION
+
+*----------------------------------------------------------------------*
+*       CLASS lcl_abap_displayer IMPLEMENTATION
+*----------------------------------------------------------------------*
+*
+*----------------------------------------------------------------------*
+CLASS lcl_abap_displayer IMPLEMENTATION.
+  METHOD pick_random_abap.
+    DATA: lv_random_number TYPE i.
+    lv_random_number = generate_random( ).
+    SELECT SINGLE content
+      FROM cs_facts
+       INTO lv_abap_fact
+        WHERE id = lv_random_number.
+  ENDMETHOD.                    "pick_random_abap
+
+  METHOD generate_random.
+    DATA lv_result TYPE i.
+    CALL FUNCTION 'RANDOM_I4'
+      EXPORTING
+        RND_MIN         = 1
+        RND_MAX         = 3
+      IMPORTING
+        RND_VALUE       = lv_result.
+    r_random = lv_result.
+  ENDMETHOD.                    "generate_random
+ENDCLASS.                    "lcl_abap_displayer IMPLEMENTATION
