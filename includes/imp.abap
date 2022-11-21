@@ -112,3 +112,17 @@ CLASS lcl_factory IMPLEMENTATION.
     ENDCASE.
   ENDMETHOD.                    "provide_object
 ENDCLASS.                    "lcl_factory
+
+*----------------------------------------------------------------------*
+*       CLASS lcl_action_handler IMPLEMENTATION
+*----------------------------------------------------------------------*
+*
+*----------------------------------------------------------------------*
+CLASS lcl_action_handler IMPLEMENTATION.
+  METHOD constructor.
+    lo_category = i_o_category.
+  ENDMETHOD.                    "constructor
+
+  METHOD decide_action.
+  ENDMETHOD.                    "decide_action
+ENDCLASS.                    "lcl_action_handler IMPLEMENTATION

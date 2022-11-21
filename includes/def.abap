@@ -70,3 +70,16 @@ CLASS lcl_factory DEFINITION.
   PUBLIC SECTION.
     METHODS: provide_object RETURNING VALUE(r_o_category) TYPE REF TO lif_category.
 ENDCLASS.                    "lcl_factory
+
+*----------------------------------------------------------------------*
+*       CLASS lcl_action_handler DEFINITION
+*----------------------------------------------------------------------*
+*
+*----------------------------------------------------------------------*
+CLASS lcl_action_handler DEFINITION.
+  PUBLIC SECTION.
+    METHODS: constructor IMPORTING i_o_category TYPE REF TO lif_category,
+             decide_action.
+  PRIVATE SECTION.
+    DATA: lo_category TYPE REF TO lif_category.
+ENDCLASS.                     "lcl_action_handler DEFINITION
