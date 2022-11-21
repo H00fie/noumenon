@@ -36,7 +36,6 @@ CLASS lcl_visibility_dispenser IMPLEMENTATION.
   ENDMETHOD.                    "make_all_blocks_inv
 ENDCLASS.                    "lcl_visibility_dispenser IMPLEMENTATION
 
-
 *----------------------------------------------------------------------*
 *       CLASS lcl_screen_adjuster IMPLEMENTATION
 *----------------------------------------------------------------------*
@@ -59,14 +58,33 @@ ENDCLASS.                    "lcl_screen_adjuster IMPLEMENTATION
 *
 *----------------------------------------------------------------------*
 CLASS lcl_abap_displayer IMPLEMENTATION.
-  METHOD pick_random_abap.
-    DATA: lv_random_number TYPE i.
+  METHOD lif_category~add_fact.
+    DATA: lwa_zbmierzwitest TYPE zbmierzwitest,
+          lv_incremented_id TYPE i.
+    lv_incremented_id = check_last_id( ) + 1.
+*    lwa_zbmierzwitest-id
+*    lwa_zbmierzwitest-category
+*    lwa_zbmierzwitest-title
+*    lwa_zbmierzwitest-content
+  ENDMETHOD.                    "add_abap_fact
+
+  METHOD lif_category~pick_random.
+    DATA: lv_random_number TYPE i,
+          lv_abap_fact     TYPE string.
     lv_random_number = generate_random( ).
     SELECT SINGLE content
-      FROM cs_facts
+      FROM zbmierzwitest
        INTO lv_abap_fact
         WHERE id = lv_random_number.
   ENDMETHOD.                    "pick_random_abap
+
+  METHOD check_last_id.
+    DATA: lv_latest_id TYPE i.
+    SELECT MAX( id )
+      FROM zbmierzwitest
+       INTO lv_latest_id.
+    r_latest_id = lv_latest_id.
+  ENDMETHOD.                    "check_last_id
 
   METHOD generate_random.
     DATA lv_result TYPE i.
@@ -79,3 +97,18 @@ CLASS lcl_abap_displayer IMPLEMENTATION.
     r_random = lv_result.
   ENDMETHOD.                    "generate_random
 ENDCLASS.                    "lcl_abap_displayer IMPLEMENTATION
+
+*----------------------------------------------------------------------*
+*       CLASS lcl_factory IMPLEMENTATION
+*----------------------------------------------------------------------*
+*
+*----------------------------------------------------------------------*
+CLASS lcl_factory IMPLEMENTATION.
+  METHOD provide_object.
+    CASE sy-ucomm.
+      WHEN 'FC1'.
+        DATA(lo_abap_displayer) = NEW lcl_abap_displayer( ).
+        r_o_category = lo_abap_displayer.
+    ENDCASE.
+  ENDMETHOD.                    "provide_object
+ENDCLASS.                    "lcl_factory

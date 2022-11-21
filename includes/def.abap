@@ -55,8 +55,18 @@ ENDCLASS.                    "lif_category DEFINITION
 *----------------------------------------------------------------------*
 CLASS lcl_abap_displayer DEFINITION.
   PUBLIC SECTION.
-    METHODS: pick_random_abap.
+    INTERFACES: lif_category.
   PRIVATE SECTION.
-    METHODS: generate_random RETURNING VALUE(r_random) TYPE i.
-    DATA: lv_abap_fact TYPE string.
+    METHODS: generate_random RETURNING VALUE(r_random) TYPE i,
+             check_last_id RETURNING VALUE(r_latest_id) TYPE i.
 ENDCLASS.                    "lcl_abap_displayer DEFINITION
+
+*----------------------------------------------------------------------*
+*       CLASS lcl_factory DEFINITION
+*----------------------------------------------------------------------*
+*
+*----------------------------------------------------------------------*
+CLASS lcl_factory DEFINITION.
+  PUBLIC SECTION.
+    METHODS: provide_object RETURNING VALUE(r_o_category) TYPE REF TO lif_category.
+ENDCLASS.                    "lcl_factory

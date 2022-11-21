@@ -18,3 +18,7 @@ AT SELECTION-SCREEN OUTPUT.
   DATA(lo_screen_adjuster) = NEW lcl_screen_adjuster( i_lo_element_remover = lo_element_remover
                                                       i_lo_visibility_dispenser = lo_visibility_dispenser ).
   lo_screen_adjuster->adjust_screen( ).
+  
+AT SELECTION-SCREEN.
+  DATA(lo_factory) = NEW lcl_factory( ).
+  lo_factory->provide_object( ).
