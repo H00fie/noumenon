@@ -27,7 +27,7 @@ ENDCLASS.                    "lcl_element_remover IMPLEMENTATION
 CLASS lcl_visibility_dispenser IMPLEMENTATION.
   METHOD make_all_blocks_inv.
     LOOP AT SCREEN.
-      IF screen-group1 = 'ID2' OR screen-group1 = 'ID3' OR screen-group1 = 'ID4' OR screen-group1 = 'ID5' OR screen-group1 = 'ID6' OR screen-group1 = 'ID7'.
+      IF screen-group1 = 'ID2' OR screen-group1 = 'ID3' OR screen-group1 = 'ID4' OR screen-group1 = 'ID5' OR screen-group1 = 'ID6' OR screen-group1 = 'ID7' OR screen-group1 = 'ID8'.
         screen-invisible = '1'.
         screen-input = '0'.
         MODIFY SCREEN.
@@ -39,7 +39,7 @@ CLASS lcl_visibility_dispenser IMPLEMENTATION.
     CASE i_marker.
       WHEN 'ID2'.
         LOOP AT SCREEN.
-          IF screen-group1 = 'ID1' OR screen-group1 = 'ID3' OR screen-group1 = 'ID4' OR screen-group1 = 'ID5' OR screen-group1 = 'ID6'.
+          IF screen-group1 = 'ID1' OR screen-group1 = 'ID3' OR screen-group1 = 'ID4' OR screen-group1 = 'ID5' OR screen-group1 = 'ID6' OR screen-group1 = 'ID8'.
             screen-invisible = '1'.
             screen-input = '0'.
             MODIFY SCREEN.
@@ -51,7 +51,7 @@ CLASS lcl_visibility_dispenser IMPLEMENTATION.
         ENDLOOP.
       WHEN 'ID3'.
         LOOP AT SCREEN.
-          IF screen-group1 = 'ID1' OR screen-group1 = 'ID2' OR screen-group1 = 'ID4' OR screen-group1 = 'ID5' OR screen-group1 = 'ID6'.
+          IF screen-group1 = 'ID1' OR screen-group1 = 'ID2' OR screen-group1 = 'ID4' OR screen-group1 = 'ID5' OR screen-group1 = 'ID6' OR screen-group1 = 'ID8'.
             screen-invisible = '1'.
             screen-input = '0'.
             MODIFY SCREEN.
@@ -63,7 +63,7 @@ CLASS lcl_visibility_dispenser IMPLEMENTATION.
         ENDLOOP.
       WHEN 'ID4'.
         LOOP AT SCREEN.
-          IF screen-group1 = 'ID1' OR screen-group1 = 'ID2' OR screen-group1 = 'ID3' OR screen-group1 = 'ID5' OR screen-group1 = 'ID6'.
+          IF screen-group1 = 'ID1' OR screen-group1 = 'ID2' OR screen-group1 = 'ID3' OR screen-group1 = 'ID5' OR screen-group1 = 'ID6' OR screen-group1 = 'ID8'.
             screen-invisible = '1'.
             screen-input = '0'.
             MODIFY SCREEN.
@@ -75,7 +75,7 @@ CLASS lcl_visibility_dispenser IMPLEMENTATION.
         ENDLOOP.
       WHEN 'ID5'.
         LOOP AT SCREEN.
-          IF screen-group1 = 'ID1' OR screen-group1 = 'ID2' OR screen-group1 = 'ID3' OR screen-group1 = 'ID4' OR screen-group1 = 'ID6'.
+          IF screen-group1 = 'ID1' OR screen-group1 = 'ID2' OR screen-group1 = 'ID3' OR screen-group1 = 'ID4' OR screen-group1 = 'ID6' OR screen-group1 = 'ID8'.
             screen-invisible = '1'.
             screen-input = '0'.
             MODIFY SCREEN.
@@ -87,7 +87,7 @@ CLASS lcl_visibility_dispenser IMPLEMENTATION.
         ENDLOOP.
       WHEN 'ID6'.
         LOOP AT SCREEN.
-          IF screen-group1 = 'ID1' OR screen-group1 = 'ID2' OR screen-group1 = 'ID3' OR screen-group1 = 'ID4' OR screen-group1 = 'ID5'.
+          IF screen-group1 = 'ID1' OR screen-group1 = 'ID2' OR screen-group1 = 'ID3' OR screen-group1 = 'ID4' OR screen-group1 = 'ID5' OR screen-group1 = 'ID8'.
             screen-invisible = '1'.
             screen-input = '0'.
             MODIFY SCREEN.
@@ -99,7 +99,19 @@ CLASS lcl_visibility_dispenser IMPLEMENTATION.
         ENDLOOP.
       WHEN 'ID7'.
         LOOP AT SCREEN.
-          IF screen-group1 = 'ID2' OR screen-group1 = 'ID3' OR screen-group1 = 'ID4' OR screen-group1 = 'ID5' OR screen-group1 = 'ID6' OR screen-group1 = 'ID7'.
+          IF screen-group1 = 'ID2' OR screen-group1 = 'ID3' OR screen-group1 = 'ID4' OR screen-group1 = 'ID5' OR screen-group1 = 'ID6' OR screen-group1 = 'ID7' OR screen-group1 = 'ID8'.
+            screen-invisible = '1'.
+            screen-input = '0'.
+            MODIFY SCREEN.
+          ELSE.
+            screen-invisible = '0'.
+            screen-input = '1'.
+            MODIFY SCREEN.
+          ENDIF.
+        ENDLOOP.
+      WHEN 'ID8'.
+        LOOP AT SCREEN.
+          IF screen-group1 = 'ID1' OR screen-group1 = 'ID2' OR screen-group1 = 'ID3' OR screen-group1 = 'ID4' OR screen-group1 = 'ID5' OR screen-group1 = 'ID6'.
             screen-invisible = '1'.
             screen-input = '0'.
             MODIFY SCREEN.
@@ -143,6 +155,8 @@ CLASS lcl_screen_adjuster IMPLEMENTATION.
         r_marker = 'ID6'.
       WHEN 'Return'.
         r_marker = 'ID7'.
+      WHEN 'ABAP_add'.
+        r_marker = 'ID8'.
     ENDCASE.
   ENDMETHOD.                    "decide_marker
 ENDCLASS.                    "lcl_screen_adjuster IMPLEMENTATION
@@ -219,8 +233,6 @@ CLASS lcl_action_handler IMPLEMENTATION.
   ENDMETHOD.                    "constructor
 
   METHOD decide_action.
-*    IF gv_action_step = 0.
-*      gv_action_step = 1.
       CASE sy-ucomm.
         WHEN 'FC1'.
           gv_action_to_perform = 'ABAP'.
@@ -234,8 +246,9 @@ CLASS lcl_action_handler IMPLEMENTATION.
           gv_action_to_perform = 'All'.
         WHEN 'FC15'.
           gv_action_to_perform = 'Return'.
+        WHEN 'FC6'.
+          gv_action_to_perform = 'ABAP_add'.
       ENDCASE.
-*    ENDIF.
   ENDMETHOD.                    "decide_action
 
   METHOD get_lo_category.
