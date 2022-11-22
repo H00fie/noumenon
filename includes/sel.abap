@@ -93,3 +93,12 @@ SELECTION-SCREEN PUSHBUTTON 1(20) TEXT-014 USER-COMMAND fc15 MODIF ID id7.
 *003 - JAVA
 *004 - Kotlin
 *005 - All
+*006 - ABAP section
+*007 - Add a fact
+*008 - Display a random fact
+*009 - Display a fact by ID
+*010 - CS section
+*011 - JAVA section
+*012 - Kotlin section
+*013 - Joined section
+*014 - Return
