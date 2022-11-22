@@ -27,13 +27,30 @@ ENDCLASS.                    "lcl_element_remover IMPLEMENTATION
 CLASS lcl_visibility_dispenser IMPLEMENTATION.
   METHOD make_all_blocks_inv.
     LOOP AT SCREEN.
-      IF screen-group1 = 'ID2' OR screen-group1 = 'ID3' OR screen-group1 = 'ID4' OR screen-group1 = 'ID5'.
+      IF screen-group1 = 'ID2' OR screen-group1 = 'ID3' OR screen-group1 = 'ID4' OR screen-group1 = 'ID5' OR screen-group1 = 'ID6'.
         screen-invisible = '1'.
         screen-input = '0'.
         MODIFY SCREEN.
       ENDIF.
     ENDLOOP.
   ENDMETHOD.                    "make_all_blocks_inv
+
+  METHOD make_block_visible.
+    CASE i_marker.
+      WHEN 'ID2'.
+        LOOP AT SCREEN.
+          IF screen-group1 = 'ID1' OR screen-group1 = 'ID3' OR screen-group1 = 'ID4' OR screen-group1 = 'ID5' OR screen-group1 = 'ID6'.
+            screen-invisible = '1'.
+            screen-input = '0'.
+            MODIFY SCREEN.
+          ELSE.
+            screen-invisible = '0'.
+            screen-input = '1'.
+            MODIFY SCREEN.
+          ENDIF.
+        ENDLOOP.
+    ENDCASE.
+  ENDMETHOD.                    "make_block_visible
 ENDCLASS.                    "lcl_visibility_dispenser IMPLEMENTATION
 
 *----------------------------------------------------------------------*
@@ -49,7 +66,23 @@ CLASS lcl_screen_adjuster IMPLEMENTATION.
 
   METHOD adjust_screen.
     lo_element_remover->hide_onli( ).
+    lo_visibility_dispenser->make_block_visible( decide_marker( ) ).
   ENDMETHOD.                    "adjust_screen
+
+  METHOD decide_marker.
+    CASE gv_category_to_display.
+      WHEN 'ABAP'.
+        r_marker = 'ID2'.
+      WHEN ''.
+        r_marker = 'ID3'.
+      WHEN 'FC3'.
+        r_marker = 'ID4'.
+      WHEN 'FC4'.
+        r_marker = 'ID5'.
+      WHEN 'FC5'.
+        r_marker = 'ID6'.
+    ENDCASE.
+  ENDMETHOD.                    "decide_marker
 ENDCLASS.                    "lcl_screen_adjuster IMPLEMENTATION
 
 *----------------------------------------------------------------------*
@@ -111,7 +144,7 @@ CLASS lcl_factory IMPLEMENTATION.
         r_o_category = lo_abap_displayer.
     ENDCASE.
   ENDMETHOD.                    "provide_object
-ENDCLASS.                    "lcl_factory
+ENDCLASS.                    "lcl_factory IMPLEMENTATION
 
 *----------------------------------------------------------------------*
 *       CLASS lcl_action_handler IMPLEMENTATION
@@ -124,5 +157,15 @@ CLASS lcl_action_handler IMPLEMENTATION.
   ENDMETHOD.                    "constructor
 
   METHOD decide_action.
+    IF gv_action_step = 0.
+      gv_action_step = 1.
+      IF sy-ucomm = 'FC1'.
+        gv_category_to_display = 'ABAP'.
+      ENDIF.
+    ENDIF.
   ENDMETHOD.                    "decide_action
+
+  METHOD get_lo_category.
+    r_lo_category = lo_category.
+  ENDMETHOD.                    "get_lo_category
 ENDCLASS.                    "lcl_action_handler IMPLEMENTATION

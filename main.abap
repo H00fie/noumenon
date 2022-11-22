@@ -22,3 +22,4 @@ AT SELECTION-SCREEN OUTPUT.
 
 AT SELECTION-SCREEN.
   DATA(lo_action_handler) = NEW lcl_action_handler( i_o_category = lo_factory->provide_object( ) ).
+  lo_action_handler->decide_action( ).
