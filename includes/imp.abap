@@ -49,6 +49,66 @@ CLASS lcl_visibility_dispenser IMPLEMENTATION.
             MODIFY SCREEN.
           ENDIF.
         ENDLOOP.
+      WHEN 'ID3'.
+        LOOP AT SCREEN.
+          IF screen-group1 = 'ID1' OR screen-group1 = 'ID2' OR screen-group1 = 'ID4' OR screen-group1 = 'ID5' OR screen-group1 = 'ID6'.
+            screen-invisible = '1'.
+            screen-input = '0'.
+            MODIFY SCREEN.
+          ELSE.
+            screen-invisible = '0'.
+            screen-input = '1'.
+            MODIFY SCREEN.
+          ENDIF.
+        ENDLOOP.
+      WHEN 'ID4'.
+        LOOP AT SCREEN.
+          IF screen-group1 = 'ID1' OR screen-group1 = 'ID2' OR screen-group1 = 'ID3' OR screen-group1 = 'ID5' OR screen-group1 = 'ID6'.
+            screen-invisible = '1'.
+            screen-input = '0'.
+            MODIFY SCREEN.
+          ELSE.
+            screen-invisible = '0'.
+            screen-input = '1'.
+            MODIFY SCREEN.
+          ENDIF.
+        ENDLOOP.
+      WHEN 'ID5'.
+        LOOP AT SCREEN.
+          IF screen-group1 = 'ID1' OR screen-group1 = 'ID2' OR screen-group1 = 'ID3' OR screen-group1 = 'ID4' OR screen-group1 = 'ID6'.
+            screen-invisible = '1'.
+            screen-input = '0'.
+            MODIFY SCREEN.
+          ELSE.
+            screen-invisible = '0'.
+            screen-input = '1'.
+            MODIFY SCREEN.
+          ENDIF.
+        ENDLOOP.
+      WHEN 'ID6'.
+        LOOP AT SCREEN.
+          IF screen-group1 = 'ID1' OR screen-group1 = 'ID2' OR screen-group1 = 'ID3' OR screen-group1 = 'ID4' OR screen-group1 = 'ID5'.
+            screen-invisible = '1'.
+            screen-input = '0'.
+            MODIFY SCREEN.
+          ELSE.
+            screen-invisible = '0'.
+            screen-input = '1'.
+            MODIFY SCREEN.
+          ENDIF.
+        ENDLOOP.
+      WHEN 'ID7'.
+        LOOP AT SCREEN.
+          IF screen-group1 = 'ID2' OR screen-group1 = 'ID3' OR screen-group1 = 'ID4' OR screen-group1 = 'ID5' OR screen-group1 = 'ID6' OR screen-group1 = 'ID7'.
+            screen-invisible = '1'.
+            screen-input = '0'.
+            MODIFY SCREEN.
+          ELSE.
+            screen-invisible = '0'.
+            screen-input = '1'.
+            MODIFY SCREEN.
+          ENDIF.
+        ENDLOOP.
     ENDCASE.
   ENDMETHOD.                    "make_block_visible
 ENDCLASS.                    "lcl_visibility_dispenser IMPLEMENTATION
@@ -70,17 +130,19 @@ CLASS lcl_screen_adjuster IMPLEMENTATION.
   ENDMETHOD.                    "adjust_screen
 
   METHOD decide_marker.
-    CASE gv_category_to_display.
+    CASE gv_action_to_perform.
       WHEN 'ABAP'.
         r_marker = 'ID2'.
-      WHEN ''.
+      WHEN 'CS'.
         r_marker = 'ID3'.
-      WHEN 'FC3'.
+      WHEN 'JAVA'.
         r_marker = 'ID4'.
-      WHEN 'FC4'.
+      WHEN 'Kotlin'.
         r_marker = 'ID5'.
-      WHEN 'FC5'.
+      WHEN 'All'.
         r_marker = 'ID6'.
+      WHEN 'Return'.
+        r_marker = 'ID7'.
     ENDCASE.
   ENDMETHOD.                    "decide_marker
 ENDCLASS.                    "lcl_screen_adjuster IMPLEMENTATION
@@ -157,12 +219,23 @@ CLASS lcl_action_handler IMPLEMENTATION.
   ENDMETHOD.                    "constructor
 
   METHOD decide_action.
-    IF gv_action_step = 0.
-      gv_action_step = 1.
-      IF sy-ucomm = 'FC1'.
-        gv_category_to_display = 'ABAP'.
-      ENDIF.
-    ENDIF.
+*    IF gv_action_step = 0.
+*      gv_action_step = 1.
+      CASE sy-ucomm.
+        WHEN 'FC1'.
+          gv_action_to_perform = 'ABAP'.
+        WHEN 'FC2'.
+          gv_action_to_perform = 'CS'.
+        WHEN 'FC3'.
+          gv_action_to_perform = 'JAVA'.
+        WHEN 'FC4'.
+          gv_action_to_perform = 'Kotlin'.
+        WHEN 'FC5'.
+          gv_action_to_perform = 'All'.
+        WHEN 'FC15'.
+          gv_action_to_perform = 'Return'.
+      ENDCASE.
+*    ENDIF.
   ENDMETHOD.                    "decide_action
 
   METHOD get_lo_category.
