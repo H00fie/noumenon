@@ -27,7 +27,7 @@ ENDCLASS.                    "lcl_element_remover IMPLEMENTATION
 CLASS lcl_visibility_dispenser IMPLEMENTATION.
   METHOD make_all_blocks_inv.
     LOOP AT SCREEN.
-      IF screen-group1 = 'ID2' OR screen-group1 = 'ID3' OR screen-group1 = 'ID4' OR screen-group1 = 'ID5' OR screen-group1 = 'ID6'.
+      IF screen-group1 = 'ID2' OR screen-group1 = 'ID3' OR screen-group1 = 'ID4' OR screen-group1 = 'ID5' OR screen-group1 = 'ID6' OR screen-group1 = 'ID7'.
         screen-invisible = '1'.
         screen-input = '0'.
         MODIFY SCREEN.
