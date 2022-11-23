@@ -38,91 +38,86 @@ CLASS lcl_visibility_dispenser IMPLEMENTATION.
   METHOD make_block_visible.
     CASE i_marker.
       WHEN 'ID2'.
-        LOOP AT SCREEN.
-          IF screen-group1 = 'ID1' OR screen-group1 = 'ID3' OR screen-group1 = 'ID4' OR screen-group1 = 'ID5' OR screen-group1 = 'ID6' OR screen-group1 = 'ID8'.
-            screen-invisible = '1'.
-            screen-input = '0'.
-            MODIFY SCREEN.
-          ELSE.
-            screen-invisible = '0'.
-            screen-input = '1'.
-            MODIFY SCREEN.
-          ENDIF.
-        ENDLOOP.
+        gv_return_stage = 1.
+        set_visibility( i_to_hide = 'ID1ID3ID4ID5ID6ID8' ).
       WHEN 'ID3'.
-        LOOP AT SCREEN.
-          IF screen-group1 = 'ID1' OR screen-group1 = 'ID2' OR screen-group1 = 'ID4' OR screen-group1 = 'ID5' OR screen-group1 = 'ID6' OR screen-group1 = 'ID8'.
-            screen-invisible = '1'.
-            screen-input = '0'.
-            MODIFY SCREEN.
-          ELSE.
-            screen-invisible = '0'.
-            screen-input = '1'.
-            MODIFY SCREEN.
-          ENDIF.
-        ENDLOOP.
+        gv_return_stage = 1.
+        set_visibility( i_to_hide = 'ID1ID2ID4ID5ID6ID8' ).
       WHEN 'ID4'.
-        LOOP AT SCREEN.
-          IF screen-group1 = 'ID1' OR screen-group1 = 'ID2' OR screen-group1 = 'ID3' OR screen-group1 = 'ID5' OR screen-group1 = 'ID6' OR screen-group1 = 'ID8'.
-            screen-invisible = '1'.
-            screen-input = '0'.
-            MODIFY SCREEN.
-          ELSE.
-            screen-invisible = '0'.
-            screen-input = '1'.
-            MODIFY SCREEN.
-          ENDIF.
-        ENDLOOP.
+        gv_return_stage = 1.
+        set_visibility( i_to_hide = 'ID1ID2ID3ID5ID6ID8' ).
       WHEN 'ID5'.
-        LOOP AT SCREEN.
-          IF screen-group1 = 'ID1' OR screen-group1 = 'ID2' OR screen-group1 = 'ID3' OR screen-group1 = 'ID4' OR screen-group1 = 'ID6' OR screen-group1 = 'ID8'.
-            screen-invisible = '1'.
-            screen-input = '0'.
-            MODIFY SCREEN.
-          ELSE.
-            screen-invisible = '0'.
-            screen-input = '1'.
-            MODIFY SCREEN.
-          ENDIF.
-        ENDLOOP.
+        gv_return_stage = 1.
+        set_visibility( i_to_hide = 'ID1ID2ID3ID4ID6ID8' ).
       WHEN 'ID6'.
-        LOOP AT SCREEN.
-          IF screen-group1 = 'ID1' OR screen-group1 = 'ID2' OR screen-group1 = 'ID3' OR screen-group1 = 'ID4' OR screen-group1 = 'ID5' OR screen-group1 = 'ID8'.
-            screen-invisible = '1'.
-            screen-input = '0'.
-            MODIFY SCREEN.
-          ELSE.
-            screen-invisible = '0'.
-            screen-input = '1'.
-            MODIFY SCREEN.
-          ENDIF.
-        ENDLOOP.
+        gv_return_stage = 1.
+        set_visibility( i_to_hide = 'ID1ID2ID3ID4ID5ID8' ).
       WHEN 'ID7'.
-        LOOP AT SCREEN.
-          IF screen-group1 = 'ID2' OR screen-group1 = 'ID3' OR screen-group1 = 'ID4' OR screen-group1 = 'ID5' OR screen-group1 = 'ID6' OR screen-group1 = 'ID7' OR screen-group1 = 'ID8'.
-            screen-invisible = '1'.
-            screen-input = '0'.
-            MODIFY SCREEN.
-          ELSE.
-            screen-invisible = '0'.
-            screen-input = '1'.
-            MODIFY SCREEN.
-          ENDIF.
-        ENDLOOP.
+        CASE gv_return_stage.
+          WHEN 0.
+            set_visibility( i_to_hide = 'ID2ID3ID4ID5ID6ID7ID8' ).
+          WHEN 1.
+            set_visibility( i_to_hide = 'ID1ID3ID4ID5ID6ID8' ).
+            gv_return_stage = 0.
+        ENDCASE.
       WHEN 'ID8'.
-        LOOP AT SCREEN.
-          IF screen-group1 = 'ID1' OR screen-group1 = 'ID2' OR screen-group1 = 'ID3' OR screen-group1 = 'ID4' OR screen-group1 = 'ID5' OR screen-group1 = 'ID6'.
-            screen-invisible = '1'.
-            screen-input = '0'.
-            MODIFY SCREEN.
-          ELSE.
-            screen-invisible = '0'.
-            screen-input = '1'.
-            MODIFY SCREEN.
-          ENDIF.
-        ENDLOOP.
+        gv_return_stage = 1.
+        set_visibility( i_to_hide = 'ID1ID2ID3ID4ID5ID6' ).
     ENDCASE.
   ENDMETHOD.                    "make_block_visible
+
+  METHOD set_visibility.
+    DATA: lv_one   TYPE string,
+          lv_two   TYPE string,
+          lv_three TYPE string,
+          lv_four  TYPE string,
+          lv_five  TYPE string,
+          lv_six  TYPE string,
+          lv_seven   TYPE string.
+    cut_string( EXPORTING i_to_cut = i_to_hide
+                IMPORTING e_one   = lv_one
+                          e_two   = lv_two
+                          e_three = lv_three
+                          e_four  = lv_four
+                          e_five  = lv_five
+                          e_six   = lv_six
+                          e_seven = lv_seven ).
+    LOOP AT SCREEN.
+      IF strlen( i_to_hide ) = 21.
+        IF screen-group1 = lv_one OR screen-group1 = lv_two OR screen-group1 = lv_three OR screen-group1 = lv_four OR screen-group1 = lv_five OR screen-group1 = lv_six OR screen-group1 = lv_seven.
+          screen-invisible = '1'.
+          screen-input = '0'.
+          MODIFY SCREEN.
+        ELSE.
+          screen-invisible = '0'.
+          screen-input = '1'.
+          MODIFY SCREEN.
+        ENDIF.
+      ELSE.
+        IF screen-group1 = lv_one OR screen-group1 = lv_two OR screen-group1 = lv_three OR screen-group1 = lv_four OR screen-group1 = lv_five OR screen-group1 = lv_six.
+          screen-invisible = '1'.
+          screen-input = '0'.
+          MODIFY SCREEN.
+        ELSE.
+          screen-invisible = '0'.
+          screen-input = '1'.
+          MODIFY SCREEN.
+        ENDIF.
+      ENDIF.
+    ENDLOOP.
+  ENDMETHOD.                    "set_visibility
+
+  METHOD cut_string.
+    e_one   = i_to_cut+0(3).
+    e_two   = i_to_cut+3(3).
+    e_three = i_to_cut+6(3).
+    e_four  = i_to_cut+9(3).
+    e_five  = i_to_cut+12(3).
+    e_six   = i_to_cut+15(3).
+    IF strlen( i_to_cut ) = 21.
+      e_seven = i_to_cut+18(3).
+    ENDIF.
+  ENDMETHOD.                    "cut_string
 ENDCLASS.                    "lcl_visibility_dispenser IMPLEMENTATION
 
 *----------------------------------------------------------------------*

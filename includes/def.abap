@@ -20,7 +20,17 @@ ENDCLASS.                    "lcl_element_remover DEFINITION
 CLASS lcl_visibility_dispenser DEFINITION.
   PUBLIC SECTION.
     METHODS: make_all_blocks_inv,
-             make_block_visible IMPORTING i_marker TYPE string.
+             make_block_visible IMPORTING i_marker  TYPE string.
+  PRIVATE SECTION.
+    METHODS: set_visibility     IMPORTING i_to_hide TYPE string,
+             cut_string         IMPORTING i_to_cut TYPE string
+                                EXPORTING e_one   TYPE string
+                                          e_two   TYPE string
+                                          e_three TYPE string
+                                          e_four  TYPE string
+                                          e_five  TYPE string
+                                          e_six   TYPE string
+                                          e_seven TYPE string.
 ENDCLASS.                    "lcl_visibility_dispenser DEFINITION
 
 *----------------------------------------------------------------------*
