@@ -22,15 +22,15 @@ CLASS lcl_visibility_dispenser DEFINITION.
     METHODS: make_all_blocks_inv,
              make_block_visible IMPORTING i_marker  TYPE string.
   PRIVATE SECTION.
-    METHODS: set_visibility     IMPORTING i_to_hide TYPE string,
-             cut_string         IMPORTING i_to_cut TYPE string
-                                EXPORTING e_one   TYPE string
-                                          e_two   TYPE string
-                                          e_three TYPE string
-                                          e_four  TYPE string
-                                          e_five  TYPE string
-                                          e_six   TYPE string
-                                          e_seven TYPE string.
+    METHODS: set_visibility IMPORTING i_to_hide TYPE string,
+             cut_string     IMPORTING i_to_cut TYPE string
+                            EXPORTING e_one   TYPE string
+                                      e_two   TYPE string
+                                      e_three TYPE string
+                                      e_four  TYPE string
+                                      e_five  TYPE string
+                                      e_six   TYPE string
+                                      e_seven TYPE string.
 ENDCLASS.                    "lcl_visibility_dispenser DEFINITION
 
 *----------------------------------------------------------------------*
@@ -69,7 +69,10 @@ CLASS lcl_abap_displayer DEFINITION.
     INTERFACES: lif_category.
   PRIVATE SECTION.
     METHODS: generate_random RETURNING VALUE(r_random) TYPE i,
-             check_last_id RETURNING VALUE(r_latest_id) TYPE i.
+             check_last_id RETURNING VALUE(r_latest_id) TYPE i,
+             get_mt_fact RETURNING VALUE(r_mt_fact) TYPE zbmierzwitest,
+             set_mt_fact IMPORTING i_mt_fact TYPE zbmierzwitest.
+    DATA: mt_fact TYPE zbmierzwitest.
 ENDCLASS.                    "lcl_abap_displayer DEFINITION
 
 *----------------------------------------------------------------------*

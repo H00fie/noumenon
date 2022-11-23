@@ -180,12 +180,13 @@ CLASS lcl_abap_displayer IMPLEMENTATION.
 
   METHOD lif_category~pick_random.
     DATA: lv_random_number TYPE i,
-          lv_abap_fact     TYPE string.
+          lt_fact TYPE zbmierzwitest.
     lv_random_number = generate_random( ).
-    SELECT SINGLE content
+    SELECT SINGLE *
       FROM zbmierzwitest
-       INTO lv_abap_fact
+       INTO lt_fact
         WHERE id = lv_random_number.
+    set_mt_fact( i_mt_fact = lt_fact ).
   ENDMETHOD.                    "pick_random_abap
 
   METHOD check_last_id.
@@ -210,6 +211,14 @@ CLASS lcl_abap_displayer IMPLEMENTATION.
         RND_VALUE       = lv_result.
     r_random = lv_result.
   ENDMETHOD.                    "generate_random
+
+  METHOD get_mt_fact.
+    r_mt_fact = mt_fact.
+  ENDMETHOD.                    "get_mt_fact
+
+  METHOD set_mt_fact.
+    mt_fact = i_mt_fact.
+  ENDMETHOD.                    "set_mt_fact
 ENDCLASS.                    "lcl_abap_displayer IMPLEMENTATION
 
 *----------------------------------------------------------------------*
@@ -220,7 +229,7 @@ ENDCLASS.                    "lcl_abap_displayer IMPLEMENTATION
 CLASS lcl_factory IMPLEMENTATION.
   METHOD provide_object.
     CASE sy-ucomm.
-      WHEN 'FC16'.
+      WHEN 'FC16' OR 'FC7'.
         DATA(lo_abap_displayer) = NEW lcl_abap_displayer( ).
         r_o_category = lo_abap_displayer.
     ENDCASE.
@@ -255,6 +264,8 @@ CLASS lcl_action_handler IMPLEMENTATION.
           gv_action_to_perform = 'ABAP_add'.
         WHEN 'FC16'.
           lo_category->add_fact( ).
+        WHEN 'FC7'.
+          lo_category->pick_random( ).
       ENDCASE.
   ENDMETHOD.                    "decide_action
 
