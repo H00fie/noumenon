@@ -72,8 +72,8 @@ CLASS lcl_visibility_dispenser IMPLEMENTATION.
           lv_three TYPE string,
           lv_four  TYPE string,
           lv_five  TYPE string,
-          lv_six  TYPE string,
-          lv_seven   TYPE string.
+          lv_six   TYPE string,
+          lv_seven TYPE string.
     cut_string( EXPORTING i_to_cut = i_to_hide
                 IMPORTING e_one   = lv_one
                           e_two   = lv_two
@@ -166,10 +166,15 @@ CLASS lcl_abap_displayer IMPLEMENTATION.
     DATA: lwa_zbmierzwitest TYPE zbmierzwitest,
           lv_incremented_id TYPE i.
     lv_incremented_id = check_last_id( ) + 1.
-*    lwa_zbmierzwitest-id
-*    lwa_zbmierzwitest-category
-*    lwa_zbmierzwitest-title
-*    lwa_zbmierzwitest-content
+    lwa_zbmierzwitest-id      = lv_incremented_id.
+    lwa_zbmierzwitest-title   = p_tit.
+    lwa_zbmierzwitest-content = p_con.
+    INSERT zbmierzwitest FROM lwa_zbmierzwitest.
+    IF sy-subrc = 0.
+      MESSAGE 'The record has been added.' TYPE 'I'.
+    ELSE.
+      MESSAGE 'The error has occured.' TYPE 'I'.
+    ENDIF.
   ENDMETHOD.                    "add_abap_fact
 
   METHOD lif_category~pick_random.
@@ -187,7 +192,11 @@ CLASS lcl_abap_displayer IMPLEMENTATION.
     SELECT MAX( id )
       FROM zbmierzwitest
        INTO lv_latest_id.
-    r_latest_id = lv_latest_id.
+    IF sy-subrc <> 0.
+      r_latest_id = 1.
+    ELSE.
+      r_latest_id = lv_latest_id.
+    ENDIF.
   ENDMETHOD.                    "check_last_id
 
   METHOD generate_random.
@@ -210,7 +219,7 @@ ENDCLASS.                    "lcl_abap_displayer IMPLEMENTATION
 CLASS lcl_factory IMPLEMENTATION.
   METHOD provide_object.
     CASE sy-ucomm.
-      WHEN 'FC1'.
+      WHEN 'FC16'.
         DATA(lo_abap_displayer) = NEW lcl_abap_displayer( ).
         r_o_category = lo_abap_displayer.
     ENDCASE.
@@ -243,6 +252,8 @@ CLASS lcl_action_handler IMPLEMENTATION.
           gv_action_to_perform = 'Return'.
         WHEN 'FC6'.
           gv_action_to_perform = 'ABAP_add'.
+        WHEN 'FC16'.
+          lo_category->add_fact( ).
       ENDCASE.
   ENDMETHOD.                    "decide_action
 
