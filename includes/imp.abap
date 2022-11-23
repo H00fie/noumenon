@@ -168,6 +168,7 @@ CLASS lcl_abap_displayer IMPLEMENTATION.
     lv_incremented_id = check_last_id( ) + 1.
     lwa_zbmierzwitest-id      = lv_incremented_id.
     lwa_zbmierzwitest-title   = p_tit.
+    lwa_zbmierzwitest-category   = 'ABAP'.
     lwa_zbmierzwitest-content = p_con.
     INSERT zbmierzwitest FROM lwa_zbmierzwitest.
     IF sy-subrc = 0.
