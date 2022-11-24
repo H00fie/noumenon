@@ -70,9 +70,9 @@ CLASS lcl_abap_displayer DEFINITION.
   PRIVATE SECTION.
     METHODS: generate_random RETURNING VALUE(r_random) TYPE i,
              check_last_id RETURNING VALUE(r_latest_id) TYPE i,
-             get_mt_fact RETURNING VALUE(r_mt_fact) TYPE zbmierzwitest,
-             set_mt_fact IMPORTING i_mt_fact TYPE zbmierzwitest.
-    DATA: mt_fact TYPE zbmierzwitest.
+             get_mt_fact RETURNING VALUE(r_mt_fact) TYPE zcsfacts,
+             set_mt_fact IMPORTING i_mt_fact TYPE zcsfacts.
+    DATA: mt_fact TYPE zcsfacts.
 ENDCLASS.                    "lcl_abap_displayer DEFINITION
 
 *----------------------------------------------------------------------*

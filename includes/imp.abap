@@ -163,14 +163,14 @@ ENDCLASS.                    "lcl_screen_adjuster IMPLEMENTATION
 *----------------------------------------------------------------------*
 CLASS lcl_abap_displayer IMPLEMENTATION.
   METHOD lif_category~add_fact.
-    DATA: lwa_zbmierzwitest TYPE zbmierzwitest,
+    DATA: lwa_zcsfacts TYPE zcsfacts,
           lv_incremented_id TYPE i.
     lv_incremented_id = check_last_id( ) + 1.
-    lwa_zbmierzwitest-id      = lv_incremented_id.
-    lwa_zbmierzwitest-title   = p_tit.
-    lwa_zbmierzwitest-category   = 'ABAP'.
-    lwa_zbmierzwitest-content = p_con.
-    INSERT zbmierzwitest FROM lwa_zbmierzwitest.
+    lwa_zcsfacts-id       = lv_incremented_id.
+    lwa_zcsfacts-title    = p_tit.
+    lwa_zcsfacts-category = 'ABAP'.
+    lwa_zcsfacts-content  = p_con.
+    INSERT zcsfacts FROM lwa_zcsfacts.
     IF sy-subrc = 0.
       MESSAGE 'The record has been added.' TYPE 'I'.
     ELSE.
@@ -180,10 +180,10 @@ CLASS lcl_abap_displayer IMPLEMENTATION.
 
   METHOD lif_category~pick_random.
     DATA: lv_random_number TYPE i,
-          lt_fact TYPE zbmierzwitest.
+          lt_fact TYPE zcsfacts.
     lv_random_number = generate_random( ).
     SELECT SINGLE *
-      FROM zbmierzwitest
+      FROM zcsfacts
        INTO lt_fact
         WHERE id = lv_random_number.
     set_mt_fact( i_mt_fact = lt_fact ).
@@ -192,7 +192,7 @@ CLASS lcl_abap_displayer IMPLEMENTATION.
   METHOD check_last_id.
     DATA: lv_latest_id TYPE i.
     SELECT MAX( id )
-      FROM zbmierzwitest
+      FROM zcsfacts
        INTO lv_latest_id.
     IF sy-subrc <> 0.
       r_latest_id = 1.
