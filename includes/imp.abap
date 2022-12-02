@@ -292,7 +292,7 @@ ENDCLASS.                    "lcl_salv IMPLEMENTATION
 CLASS lcl_factory IMPLEMENTATION.
   METHOD provide_object.
     CASE sy-ucomm.
-      WHEN 'FC16' OR 'FC7' OR 'FC8'.
+      WHEN 'FC16' OR 'FC7' OR 'FC17'.
         DATA(lo_salv) = NEW lcl_salv( ).
         DATA(lo_abap_displayer) = NEW lcl_abap_displayer( i_mo_salv = lo_salv ).
         r_o_category = lo_abap_displayer.
@@ -332,6 +332,8 @@ CLASS lcl_action_handler IMPLEMENTATION.
           lo_category->pick_random( ).
         WHEN 'FC8'.
           gv_action_to_perform = 'ABAP_by_id'.
+        WHEN 'FC17'.
+          lo_category->pick_by_id( i_id = p_id ).
       ENDCASE.
   ENDMETHOD.                    "decide_action
 
