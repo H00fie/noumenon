@@ -27,7 +27,7 @@ ENDCLASS.                    "lcl_element_remover IMPLEMENTATION
 CLASS lcl_visibility_dispenser IMPLEMENTATION.
   METHOD make_all_blocks_inv.
     LOOP AT SCREEN.
-      IF screen-group1 = 'ID2' OR screen-group1 = 'ID3' OR screen-group1 = 'ID4' OR screen-group1 = 'ID5' OR screen-group1 = 'ID6' OR screen-group1 = 'ID7' OR screen-group1 = 'ID8'.
+      IF screen-group1 = 'ID2' OR screen-group1 = 'ID3' OR screen-group1 = 'ID4' OR screen-group1 = 'ID5' OR screen-group1 = 'ID6' OR screen-group1 = 'ID7' OR screen-group1 = 'ID8' OR screen-group1 = 'ID9'.
         screen-invisible = '1'.
         screen-input = '0'.
         MODIFY SCREEN.
@@ -39,30 +39,33 @@ CLASS lcl_visibility_dispenser IMPLEMENTATION.
     CASE i_marker.
       WHEN 'ID2'.
         gv_return_stage = 1.
-        set_visibility( i_to_hide = 'ID1ID3ID4ID5ID6ID8' ).
+        set_visibility( i_to_hide = 'ID1ID3ID4ID5ID6ID8ID9' ).
       WHEN 'ID3'.
         gv_return_stage = 1.
-        set_visibility( i_to_hide = 'ID1ID2ID4ID5ID6ID8' ).
+        set_visibility( i_to_hide = 'ID1ID2ID4ID5ID6ID8ID9' ).
       WHEN 'ID4'.
         gv_return_stage = 1.
-        set_visibility( i_to_hide = 'ID1ID2ID3ID5ID6ID8' ).
+        set_visibility( i_to_hide = 'ID1ID2ID3ID5ID6ID8ID9' ).
       WHEN 'ID5'.
         gv_return_stage = 1.
-        set_visibility( i_to_hide = 'ID1ID2ID3ID4ID6ID8' ).
+        set_visibility( i_to_hide = 'ID1ID2ID3ID4ID6ID8ID9' ).
       WHEN 'ID6'.
         gv_return_stage = 1.
-        set_visibility( i_to_hide = 'ID1ID2ID3ID4ID5ID8' ).
+        set_visibility( i_to_hide = 'ID1ID2ID3ID4ID5ID8ID9' ).
       WHEN 'ID7'.
         CASE gv_return_stage.
           WHEN 0.
-            set_visibility( i_to_hide = 'ID2ID3ID4ID5ID6ID7ID8' ).
+            set_visibility( i_to_hide = 'ID2ID3ID4ID5ID6ID7ID8ID9' ).
           WHEN 1.
-            set_visibility( i_to_hide = 'ID1ID3ID4ID5ID6ID8' ).
+            set_visibility( i_to_hide = 'ID1ID3ID4ID5ID6ID8ID9' ).
             gv_return_stage = 0.
         ENDCASE.
       WHEN 'ID8'.
         gv_return_stage = 1.
-        set_visibility( i_to_hide = 'ID1ID2ID3ID4ID5ID6' ).
+        set_visibility( i_to_hide = 'ID1ID2ID3ID4ID5ID6ID9' ).
+      WHEN 'ID9'.
+        gv_return_stage = 1.
+        set_visibility( i_to_hide = 'ID1ID2ID3ID4ID5ID6ID8' ).
     ENDCASE.
   ENDMETHOD.                    "make_block_visible
 
@@ -73,7 +76,8 @@ CLASS lcl_visibility_dispenser IMPLEMENTATION.
           lv_four  TYPE string,
           lv_five  TYPE string,
           lv_six   TYPE string,
-          lv_seven TYPE string.
+          lv_seven TYPE string,
+          lv_eight TYPE string.
     cut_string( EXPORTING i_to_cut = i_to_hide
                 IMPORTING e_one   = lv_one
                           e_two   = lv_two
@@ -81,10 +85,11 @@ CLASS lcl_visibility_dispenser IMPLEMENTATION.
                           e_four  = lv_four
                           e_five  = lv_five
                           e_six   = lv_six
-                          e_seven = lv_seven ).
+                          e_seven = lv_seven
+                          e_eight = lv_eight ).
     LOOP AT SCREEN.
-      IF strlen( i_to_hide ) = 21.
-        IF screen-group1 = lv_one OR screen-group1 = lv_two OR screen-group1 = lv_three OR screen-group1 = lv_four OR screen-group1 = lv_five OR screen-group1 = lv_six OR screen-group1 = lv_seven.
+      IF strlen( i_to_hide ) = 24.
+        IF screen-group1 = lv_one OR screen-group1 = lv_two OR screen-group1 = lv_three OR screen-group1 = lv_four OR screen-group1 = lv_five OR screen-group1 = lv_six OR screen-group1 = lv_seven OR screen-group1 = lv_eight.
           screen-invisible = '1'.
           screen-input = '0'.
           MODIFY SCREEN.
@@ -94,7 +99,7 @@ CLASS lcl_visibility_dispenser IMPLEMENTATION.
           MODIFY SCREEN.
         ENDIF.
       ELSE.
-        IF screen-group1 = lv_one OR screen-group1 = lv_two OR screen-group1 = lv_three OR screen-group1 = lv_four OR screen-group1 = lv_five OR screen-group1 = lv_six.
+        IF screen-group1 = lv_one OR screen-group1 = lv_two OR screen-group1 = lv_three OR screen-group1 = lv_four OR screen-group1 = lv_five OR screen-group1 = lv_six OR screen-group1 = lv_seven.
           screen-invisible = '1'.
           screen-input = '0'.
           MODIFY SCREEN.
@@ -114,8 +119,9 @@ CLASS lcl_visibility_dispenser IMPLEMENTATION.
     e_four  = i_to_cut+9(3).
     e_five  = i_to_cut+12(3).
     e_six   = i_to_cut+15(3).
-    IF strlen( i_to_cut ) = 21.
-      e_seven = i_to_cut+18(3).
+    e_seven = i_to_cut+18(3).
+    IF strlen( i_to_cut ) = 24.
+      e_eight = i_to_cut+21(3).
     ENDIF.
   ENDMETHOD.                    "cut_string
 ENDCLASS.                    "lcl_visibility_dispenser IMPLEMENTATION
@@ -152,6 +158,8 @@ CLASS lcl_screen_adjuster IMPLEMENTATION.
         r_marker = 'ID7'.
       WHEN 'ABAP_add'.
         r_marker = 'ID8'.
+      WHEN 'ABAP_by_id'.
+        r_marker = 'ID9'.
     ENDCASE.
   ENDMETHOD.                    "decide_marker
 ENDCLASS.                    "lcl_screen_adjuster IMPLEMENTATION
@@ -162,14 +170,18 @@ ENDCLASS.                    "lcl_screen_adjuster IMPLEMENTATION
 *
 *----------------------------------------------------------------------*
 CLASS lcl_abap_displayer IMPLEMENTATION.
+  METHOD constructor.
+    me->mo_salv = i_mo_salv.
+  ENDMETHOD.                    "constructor
+
   METHOD lif_category~add_fact.
     DATA: lwa_zcsfacts TYPE zcsfacts,
           lv_incremented_id TYPE i.
     lv_incremented_id = check_last_id( ) + 1.
-    lwa_zcsfacts-id       = lv_incremented_id.
-    lwa_zcsfacts-title    = p_tit.
-    lwa_zcsfacts-category = 'ABAP'.
-    lwa_zcsfacts-content  = p_con.
+    lwa_zcsfacts-id      = lv_incremented_id.
+    lwa_zcsfacts-title   = p_tit.
+    lwa_zcsfacts-category   = 'ABAP'.
+    lwa_zcsfacts-content = p_con.
     INSERT zcsfacts FROM lwa_zcsfacts.
     IF sy-subrc = 0.
       MESSAGE 'The record has been added.' TYPE 'I'.
@@ -180,14 +192,27 @@ CLASS lcl_abap_displayer IMPLEMENTATION.
 
   METHOD lif_category~pick_random.
     DATA: lv_random_number TYPE i,
-          lt_fact TYPE zcsfacts.
+          lt_fact TYPE zcsfacsts.
     lv_random_number = generate_random( ).
+    CLEAR lt_fact.
     SELECT SINGLE *
       FROM zcsfacts
        INTO lt_fact
         WHERE id = lv_random_number.
-    set_mt_fact( i_mt_fact = lt_fact ).
+    set_mwa_fact( i_mwa_fact = lt_fact ).
+    display_fact( ).
   ENDMETHOD.                    "pick_random_abap
+
+  METHOD lif_category~pick_by_id.
+    DATA: lt_fact TYPE zcsfacts.
+    CLEAR lt_fact.
+    SELECT SINGLE *
+      FROM zcsfacts
+        INTO lt_fact
+          WHERE id = i_id.
+    set_mwa_fact( i_mwa_fact = lt_fact ).
+    display_fact( ).
+  ENDMETHOD.                    "pick_by_id
 
   METHOD check_last_id.
     DATA: lv_latest_id TYPE i.
@@ -201,6 +226,12 @@ CLASS lcl_abap_displayer IMPLEMENTATION.
     ENDIF.
   ENDMETHOD.                    "check_last_id
 
+  METHOD display_fact.
+    DATA: lt_fact TYPE STANDARD TABLE OF zcsfacts.
+    APPEND mwa_fact TO lt_fact.
+    mo_salv->display_alv( CHANGING c_lt_tab = lt_fact ).
+  ENDMETHOD.                    "display_fact
+
   METHOD generate_random.
     DATA lv_result TYPE i.
     CALL FUNCTION 'RANDOM_I4'
@@ -212,14 +243,46 @@ CLASS lcl_abap_displayer IMPLEMENTATION.
     r_random = lv_result.
   ENDMETHOD.                    "generate_random
 
-  METHOD get_mt_fact.
-    r_mt_fact = mt_fact.
+  METHOD get_mwa_fact.
+    r_mwa_fact = mwa_fact.
   ENDMETHOD.                    "get_mt_fact
 
-  METHOD set_mt_fact.
-    mt_fact = i_mt_fact.
+  METHOD set_mwa_fact.
+    mwa_fact = i_mwa_fact.
   ENDMETHOD.                    "set_mt_fact
 ENDCLASS.                    "lcl_abap_displayer IMPLEMENTATION
+
+*----------------------------------------------------------------------*
+*       CLASS lcl_salv IMPLEMENTATION
+*----------------------------------------------------------------------*
+*
+*----------------------------------------------------------------------*
+CLASS lcl_salv IMPLEMENTATION.
+  METHOD display_alv.
+    prepare_data( CHANGING c_lt_tab = c_lt_tab ).
+    change_columns( ).
+    alv_table->display( ).
+  ENDMETHOD.                    "display_alv
+
+  METHOD prepare_data.
+    TRY.
+        cl_salv_table=>factory(
+          IMPORTING
+            r_salv_table   = alv_table
+          CHANGING
+            t_table        = c_lt_tab ).
+      CATCH cx_salv_msg .
+    ENDTRY.
+    alv_table->get_functions( )->set_all( abap_true ).
+    alv_table->get_columns( )->set_optimize( abap_true ).
+  ENDMETHOD.                    "prepare_data
+
+  METHOD change_columns.
+  ENDMETHOD.                    "change_columns
+
+  METHOD change_column_header.
+  ENDMETHOD.                    "change_column_header
+ENDCLASS.                    "lcl_salv IMPLEMENTATION
 
 *----------------------------------------------------------------------*
 *       CLASS lcl_factory IMPLEMENTATION
@@ -229,8 +292,9 @@ ENDCLASS.                    "lcl_abap_displayer IMPLEMENTATION
 CLASS lcl_factory IMPLEMENTATION.
   METHOD provide_object.
     CASE sy-ucomm.
-      WHEN 'FC16' OR 'FC7'.
-        DATA(lo_abap_displayer) = NEW lcl_abap_displayer( ).
+      WHEN 'FC16' OR 'FC7' OR 'FC8'.
+        DATA(lo_salv) = NEW lcl_salv( ).
+        DATA(lo_abap_displayer) = NEW lcl_abap_displayer( i_mo_salv = lo_salv ).
         r_o_category = lo_abap_displayer.
     ENDCASE.
   ENDMETHOD.                    "provide_object
@@ -266,6 +330,8 @@ CLASS lcl_action_handler IMPLEMENTATION.
           lo_category->add_fact( ).
         WHEN 'FC7'.
           lo_category->pick_random( ).
+        WHEN 'FC8'.
+          gv_action_to_perform = 'ABAP_by_id'.
       ENDCASE.
   ENDMETHOD.                    "decide_action
 

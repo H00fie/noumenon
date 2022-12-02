@@ -30,7 +30,8 @@ CLASS lcl_visibility_dispenser DEFINITION.
                                       e_four  TYPE string
                                       e_five  TYPE string
                                       e_six   TYPE string
-                                      e_seven TYPE string.
+                                      e_seven TYPE string
+                                      e_eight TYPE string.
 ENDCLASS.                    "lcl_visibility_dispenser DEFINITION
 
 *----------------------------------------------------------------------*
