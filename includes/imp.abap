@@ -70,8 +70,8 @@ CLASS lcl_visibility_dispenser IMPLEMENTATION.
   ENDMETHOD.                    "make_block_visible
 
   METHOD set_visibility.
-    DATA: lt_id_tab  TYPE STANDARD TABLE OF zbmierzwitest3,
-          lwa_id_tab TYPE zbmierzwitest3,
+    DATA: lt_id_tab  TYPE STANDARD TABLE OF zids,
+          lwa_id_tab TYPE zids,
           lv_counter TYPE i VALUE 0,
           lv_one     TYPE string,
           lv_two     TYPE string,
@@ -137,8 +137,8 @@ CLASS lcl_visibility_dispenser IMPLEMENTATION.
   ENDMETHOD.                    "set_visibility
 
   METHOD cut_string.
-    DATA: lt_id_tab  TYPE TABLE OF zbmierzwitest3,
-          lwa_id_tab TYPE zbmierzwitest3.
+    DATA: lt_id_tab  TYPE TABLE OF zids,
+          lwa_id_tab TYPE zids.
     CLEAR lwa_id_tab.
     lwa_id_tab-value = i_to_cut+0(3).
     APPEND lwa_id_tab TO lt_id_tab.
