@@ -70,23 +70,47 @@ CLASS lcl_visibility_dispenser IMPLEMENTATION.
   ENDMETHOD.                    "make_block_visible
 
   METHOD set_visibility.
-    DATA: lv_one   TYPE string,
-          lv_two   TYPE string,
-          lv_three TYPE string,
-          lv_four  TYPE string,
-          lv_five  TYPE string,
-          lv_six   TYPE string,
-          lv_seven TYPE string,
-          lv_eight TYPE string.
+    DATA: lt_id_tab  TYPE STANDARD TABLE OF zbmierzwitest3,
+          lwa_id_tab TYPE zbmierzwitest3,
+          lv_counter TYPE i VALUE 0,
+          lv_one     TYPE string,
+          lv_two     TYPE string,
+          lv_three   TYPE string,
+          lv_four    TYPE string,
+          lv_five    TYPE string,
+          lv_six     TYPE string,
+          lv_seven   TYPE string,
+          lv_eight   TYPE string.
     cut_string( EXPORTING i_to_cut = i_to_hide
-                IMPORTING e_one   = lv_one
-                          e_two   = lv_two
-                          e_three = lv_three
-                          e_four  = lv_four
-                          e_five  = lv_five
-                          e_six   = lv_six
-                          e_seven = lv_seven
-                          e_eight = lv_eight ).
+                IMPORTING e_id_tab = lt_id_tab ).
+    LOOP AT lt_id_tab INTO lwa_id_tab.
+      CASE lv_counter.
+        WHEN 0.
+          lv_one = lwa_id_tab-value.
+          lv_counter = lv_counter + 1.
+        WHEN 1.
+          lv_two = lwa_id_tab-value.
+          lv_counter = lv_counter + 1.
+        WHEN 2.
+          lv_three = lwa_id_tab-value.
+          lv_counter = lv_counter + 1.
+        WHEN 3.
+          lv_four = lwa_id_tab-value.
+          lv_counter = lv_counter + 1.
+        WHEN 4.
+          lv_five = lwa_id_tab-value.
+          lv_counter = lv_counter + 1.
+        WHEN 5.
+          lv_six = lwa_id_tab-value.
+          lv_counter = lv_counter + 1.
+        WHEN 6.
+          lv_seven = lwa_id_tab-value.
+          lv_counter = lv_counter + 1.
+        WHEN 7.
+          lv_eight = lwa_id_tab-value.
+          lv_counter = lv_counter + 1.
+      ENDCASE.
+    ENDLOOP.
     LOOP AT SCREEN.
       IF strlen( i_to_hide ) = 24.
         IF screen-group1 = lv_one OR screen-group1 = lv_two OR screen-group1 = lv_three OR screen-group1 = lv_four OR screen-group1 = lv_five OR screen-group1 = lv_six OR screen-group1 = lv_seven OR screen-group1 = lv_eight.
@@ -113,16 +137,35 @@ CLASS lcl_visibility_dispenser IMPLEMENTATION.
   ENDMETHOD.                    "set_visibility
 
   METHOD cut_string.
-    e_one   = i_to_cut+0(3).
-    e_two   = i_to_cut+3(3).
-    e_three = i_to_cut+6(3).
-    e_four  = i_to_cut+9(3).
-    e_five  = i_to_cut+12(3).
-    e_six   = i_to_cut+15(3).
-    e_seven = i_to_cut+18(3).
+    DATA: lt_id_tab  TYPE TABLE OF zbmierzwitest3,
+          lwa_id_tab TYPE zbmierzwitest3.
+    CLEAR lwa_id_tab.
+    lwa_id_tab-value = i_to_cut+0(3).
+    APPEND lwa_id_tab TO lt_id_tab.
+    CLEAR lwa_id_tab.
+    lwa_id_tab-value = i_to_cut+3(3).
+    APPEND lwa_id_tab TO lt_id_tab.
+    CLEAR lwa_id_tab.
+    lwa_id_tab-value = i_to_cut+6(3).
+    APPEND lwa_id_tab TO lt_id_tab.
+    lwa_id_tab-value = i_to_cut+9(3).
+    APPEND lwa_id_tab TO lt_id_tab.
+    CLEAR lwa_id_tab.
+    lwa_id_tab-value = i_to_cut+12(3).
+    APPEND lwa_id_tab TO lt_id_tab.
+    CLEAR lwa_id_tab.
+    lwa_id_tab-value = i_to_cut+15(3).
+    APPEND lwa_id_tab TO lt_id_tab.
+    CLEAR lwa_id_tab.
+    lwa_id_tab-value = i_to_cut+18(3).
+    APPEND lwa_id_tab TO lt_id_tab.
+    CLEAR lwa_id_tab.
     IF strlen( i_to_cut ) = 24.
-      e_eight = i_to_cut+21(3).
+      lwa_id_tab-value = i_to_cut+21(3).
+      APPEND lwa_id_tab TO lt_id_tab.
+      CLEAR lwa_id_tab.
     ENDIF.
+    e_id_tab = lt_id_tab.
   ENDMETHOD.                    "cut_string
 ENDCLASS.                    "lcl_visibility_dispenser IMPLEMENTATION
 
