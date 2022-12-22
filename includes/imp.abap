@@ -70,8 +70,8 @@ CLASS lcl_visibility_dispenser IMPLEMENTATION.
   ENDMETHOD.                    "make_block_visible
 
   METHOD set_visibility.
-    DATA: lt_id_tab  TYPE STANDARD TABLE OF zids,
-          lwa_id_tab TYPE zids,
+    DATA: lt_id_tab  TYPE STANDARD TABLE OF zbmierzwitest3,
+          lwa_id_tab TYPE zbmierzwitest3,
           lv_counter TYPE i VALUE 0,
           lv_one     TYPE string,
           lv_two     TYPE string,
@@ -137,8 +137,8 @@ CLASS lcl_visibility_dispenser IMPLEMENTATION.
   ENDMETHOD.                    "set_visibility
 
   METHOD cut_string.
-    DATA: lt_id_tab  TYPE TABLE OF zids,
-          lwa_id_tab TYPE zids.
+    DATA: lt_id_tab  TYPE TABLE OF zbmierzwitest3,
+          lwa_id_tab TYPE zbmierzwitest3.
     CLEAR lwa_id_tab.
     lwa_id_tab-value = i_to_cut+0(3).
     APPEND lwa_id_tab TO lt_id_tab.
@@ -218,14 +218,14 @@ CLASS lcl_abap_displayer IMPLEMENTATION.
   ENDMETHOD.                    "constructor
 
   METHOD lif_category~add_fact.
-    DATA: lwa_zcsfacts TYPE zcsfacts,
+    DATA: lwa_zbmierzwitest TYPE zbmierzwitest,
           lv_incremented_id TYPE i.
-    lv_incremented_id = check_last_id( ) + 1.
-    lwa_zcsfacts-id       = lv_incremented_id.
-    lwa_zcsfacts-title    = p_tit.
-    lwa_zcsfacts-category = 'ABAP'.
-    lwa_zcsfacts-content  = p_con.
-    INSERT zcsfacts FROM lwa_zcsfacts.
+    lv_incremented_id = lif_category~check_last_id( ) + 1.
+    lwa_zbmierzwitest-id       = lv_incremented_id.
+    lwa_zbmierzwitest-title    = p_tit.
+    lwa_zbmierzwitest-category = 'ABAP'.
+    lwa_zbmierzwitest-content  = p_con.
+    INSERT zbmierzwitest FROM lwa_zbmierzwitest.
     IF sy-subrc = 0.
       MESSAGE 'The record has been added.' TYPE 'I'.
     ELSE.
@@ -235,32 +235,32 @@ CLASS lcl_abap_displayer IMPLEMENTATION.
 
   METHOD lif_category~pick_random.
     DATA: lv_random_number TYPE i,
-          lt_fact TYPE zcsfacsts.
-    lv_random_number = generate_random( ).
+          lt_fact TYPE zbmierzwitest.
+    lv_random_number = lif_category~generate_random( ).
     CLEAR lt_fact.
     SELECT SINGLE *
-      FROM zcsfacts
+      FROM zbmierzwitest
        INTO lt_fact
         WHERE id = lv_random_number.
     set_wa_fact( i_wa_fact = lt_fact ).
-    display_fact( ).
+    lif_category~display_fact( ).
   ENDMETHOD.                    "pick_random_abap
 
   METHOD lif_category~pick_by_id.
-    DATA: lt_fact TYPE zcsfacts.
+    DATA: lt_fact TYPE zbmierzwitest.
     CLEAR lt_fact.
     SELECT SINGLE *
-      FROM zcsfacts
+      FROM zbmierzwitest
         INTO lt_fact
           WHERE id = i_id.
     set_wa_fact( i_wa_fact = lt_fact ).
-    display_fact( ).
+    lif_category~display_fact( ).
   ENDMETHOD.                    "pick_by_id
 
-  METHOD check_last_id.
+  METHOD lif_category~check_last_id.
     DATA: lv_latest_id TYPE i.
     SELECT MAX( id )
-      FROM zcsfacts
+      FROM zbmierzwitest
        INTO lv_latest_id.
     IF sy-subrc <> 0.
       r_latest_id = 1.
@@ -269,13 +269,13 @@ CLASS lcl_abap_displayer IMPLEMENTATION.
     ENDIF.
   ENDMETHOD.                    "check_last_id
 
-  METHOD display_fact.
-    DATA: lt_fact TYPE STANDARD TABLE OF zcsfacts.
+  METHOD lif_category~display_fact.
+    DATA: lt_fact TYPE STANDARD TABLE OF zbmierzwitest.
     APPEND wa_fact TO lt_fact.
     o_salv->display_alv( CHANGING c_lt_tab = lt_fact ).
   ENDMETHOD.                    "display_fact
 
-  METHOD generate_random.
+  METHOD lif_category~generate_random.
     DATA lv_result TYPE i.
     CALL FUNCTION 'RANDOM_I4'
       EXPORTING
@@ -288,11 +288,11 @@ CLASS lcl_abap_displayer IMPLEMENTATION.
 
   METHOD get_wa_fact.
     r_wa_fact = wa_fact.
-  ENDMETHOD.                    "get_wa_fact
+  ENDMETHOD.                    "get_mt_fact
 
   METHOD set_wa_fact.
     wa_fact = i_wa_fact.
-  ENDMETHOD.                    "set_wa_fact
+  ENDMETHOD.                    "set_mt_fact
 ENDCLASS.                    "lcl_abap_displayer IMPLEMENTATION
 
 *----------------------------------------------------------------------*
@@ -335,7 +335,7 @@ ENDCLASS.                    "lcl_salv IMPLEMENTATION
 CLASS lcl_factory IMPLEMENTATION.
   METHOD provide_object.
     CASE sy-ucomm.
-      WHEN 'FC16' OR 'FC7' OR 'FC17'.
+      WHEN 'FC1' OR'FC16' OR 'FC7' OR 'FC17'.
         DATA(lo_salv) = NEW lcl_salv( ).
         DATA(lo_abap_displayer) = NEW lcl_abap_displayer( i_o_salv = lo_salv ).
         r_o_category = lo_abap_displayer.

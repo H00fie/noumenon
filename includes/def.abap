@@ -50,7 +50,11 @@ ENDCLASS.                    "lcl_screen_adjuster DEFINITION
 *----------------------------------------------------------------------*
 INTERFACE lif_category.
     METHODS: add_fact,
-             pick_random.
+             pick_random,
+             generate_random RETURNING VALUE(r_random) TYPE i,
+             pick_by_id IMPORTING i_id TYPE i,
+             check_last_id RETURNING VALUE(r_latest_id) TYPE i,
+             display_fact.
 ENDINTERFACE.                    "lif_category
 
 *----------------------------------------------------------------------*
@@ -63,10 +67,7 @@ CLASS lcl_abap_displayer DEFINITION.
     METHODS: constructor IMPORTING i_o_salv TYPE REF TO lcl_salv.
     INTERFACES: lif_category.
   PRIVATE SECTION.
-    METHODS: generate_random RETURNING VALUE(r_random) TYPE i,
-             check_last_id RETURNING VALUE(r_latest_id) TYPE i,
-             display_fact,
-             get_wa_fact RETURNING VALUE(r_wa_fact) TYPE zcsfacts,
+    METHODS: get_wa_fact RETURNING VALUE(r_wa_fact) TYPE zcsfacts,
              set_wa_fact IMPORTING i_wa_fact TYPE zcsfacts.
     DATA: wa_fact TYPE zbmierzwitest,
           o_salv  TYPE REF TO lcl_salv.
