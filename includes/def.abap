@@ -60,13 +60,16 @@ ENDINTERFACE.                    "lif_category
 *----------------------------------------------------------------------*
 CLASS lcl_abap_displayer DEFINITION.
   PUBLIC SECTION.
+    METHODS: constructor IMPORTING i_o_salv TYPE REF TO lcl_salv.
     INTERFACES: lif_category.
   PRIVATE SECTION.
     METHODS: generate_random RETURNING VALUE(r_random) TYPE i,
              check_last_id RETURNING VALUE(r_latest_id) TYPE i,
-             get_mt_fact RETURNING VALUE(r_mt_fact) TYPE zcsfacts,
-             set_mt_fact IMPORTING i_mt_fact TYPE zcsfacts.
-    DATA: mt_fact TYPE zcsfacts.
+             display_fact,
+             get_wa_fact RETURNING VALUE(r_wa_fact) TYPE zcsfacts,
+             set_wa_fact IMPORTING i_wa_fact TYPE zcsfacts.
+    DATA: wa_fact TYPE zbmierzwitest,
+          o_salv  TYPE REF TO lcl_salv.
 ENDCLASS.                    "lcl_abap_displayer DEFINITION
 
 *----------------------------------------------------------------------*

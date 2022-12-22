@@ -214,17 +214,17 @@ ENDCLASS.                    "lcl_screen_adjuster IMPLEMENTATION
 *----------------------------------------------------------------------*
 CLASS lcl_abap_displayer IMPLEMENTATION.
   METHOD constructor.
-    me->mo_salv = i_mo_salv.
+    me->o_salv = i_o_salv.
   ENDMETHOD.                    "constructor
 
   METHOD lif_category~add_fact.
     DATA: lwa_zcsfacts TYPE zcsfacts,
           lv_incremented_id TYPE i.
     lv_incremented_id = check_last_id( ) + 1.
-    lwa_zcsfacts-id      = lv_incremented_id.
-    lwa_zcsfacts-title   = p_tit.
-    lwa_zcsfacts-category   = 'ABAP'.
-    lwa_zcsfacts-content = p_con.
+    lwa_zcsfacts-id       = lv_incremented_id.
+    lwa_zcsfacts-title    = p_tit.
+    lwa_zcsfacts-category = 'ABAP'.
+    lwa_zcsfacts-content  = p_con.
     INSERT zcsfacts FROM lwa_zcsfacts.
     IF sy-subrc = 0.
       MESSAGE 'The record has been added.' TYPE 'I'.
@@ -242,7 +242,7 @@ CLASS lcl_abap_displayer IMPLEMENTATION.
       FROM zcsfacts
        INTO lt_fact
         WHERE id = lv_random_number.
-    set_mwa_fact( i_mwa_fact = lt_fact ).
+    set_wa_fact( i_wa_fact = lt_fact ).
     display_fact( ).
   ENDMETHOD.                    "pick_random_abap
 
@@ -253,7 +253,7 @@ CLASS lcl_abap_displayer IMPLEMENTATION.
       FROM zcsfacts
         INTO lt_fact
           WHERE id = i_id.
-    set_mwa_fact( i_mwa_fact = lt_fact ).
+    set_wa_fact( i_wa_fact = lt_fact ).
     display_fact( ).
   ENDMETHOD.                    "pick_by_id
 
@@ -271,8 +271,8 @@ CLASS lcl_abap_displayer IMPLEMENTATION.
 
   METHOD display_fact.
     DATA: lt_fact TYPE STANDARD TABLE OF zcsfacts.
-    APPEND mwa_fact TO lt_fact.
-    mo_salv->display_alv( CHANGING c_lt_tab = lt_fact ).
+    APPEND wa_fact TO lt_fact.
+    o_salv->display_alv( CHANGING c_lt_tab = lt_fact ).
   ENDMETHOD.                    "display_fact
 
   METHOD generate_random.
@@ -286,13 +286,13 @@ CLASS lcl_abap_displayer IMPLEMENTATION.
     r_random = lv_result.
   ENDMETHOD.                    "generate_random
 
-  METHOD get_mwa_fact.
-    r_mwa_fact = mwa_fact.
-  ENDMETHOD.                    "get_mt_fact
+  METHOD get_wa_fact.
+    r_wa_fact = wa_fact.
+  ENDMETHOD.                    "get_wa_fact
 
-  METHOD set_mwa_fact.
-    mwa_fact = i_mwa_fact.
-  ENDMETHOD.                    "set_mt_fact
+  METHOD set_wa_fact.
+    wa_fact = i_wa_fact.
+  ENDMETHOD.                    "set_wa_fact
 ENDCLASS.                    "lcl_abap_displayer IMPLEMENTATION
 
 *----------------------------------------------------------------------*
@@ -337,7 +337,7 @@ CLASS lcl_factory IMPLEMENTATION.
     CASE sy-ucomm.
       WHEN 'FC16' OR 'FC7' OR 'FC17'.
         DATA(lo_salv) = NEW lcl_salv( ).
-        DATA(lo_abap_displayer) = NEW lcl_abap_displayer( i_mo_salv = lo_salv ).
+        DATA(lo_abap_displayer) = NEW lcl_abap_displayer( i_o_salv = lo_salv ).
         r_o_category = lo_abap_displayer.
     ENDCASE.
   ENDMETHOD.                    "provide_object
