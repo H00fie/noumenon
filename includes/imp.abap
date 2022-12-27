@@ -39,9 +39,11 @@ CLASS lcl_visibility_dispenser IMPLEMENTATION.
     CASE i_marker.
       WHEN 'ID2'.
         gv_return_stage = 1.
+        adjust_pre_return_action( i_action = 'ID2' ).
         set_visibility( i_to_hide = 'ID1ID3ID4ID5ID6ID8ID9' ).
       WHEN 'ID3'.
         gv_return_stage = 1.
+        adjust_pre_return_action( i_action = 'ID3' ).
         set_visibility( i_to_hide = 'ID1ID2ID4ID5ID6ID8ID9' ).
       WHEN 'ID4'.
         gv_return_stage = 1.
@@ -54,14 +56,20 @@ CLASS lcl_visibility_dispenser IMPLEMENTATION.
         set_visibility( i_to_hide = 'ID1ID2ID3ID4ID5ID8ID9' ).
       WHEN 'ID7'.
         CASE gv_return_stage.
-          WHEN 0.
-            set_visibility( i_to_hide = 'ID2ID3ID4ID5ID6ID7ID8ID9' ).
           WHEN 1.
-            set_visibility( i_to_hide = 'ID1ID3ID4ID5ID6ID8ID9' ).
-            gv_return_stage = 0.
+            set_visibility( i_to_hide = 'ID2ID3ID4ID5ID6ID7ID8ID9' ).
+          WHEN 2.
+            CASE pre_return_action.
+              WHEN 'ABAP'.
+                set_visibility( i_to_hide = 'ID1ID3ID4ID5ID6ID8ID9' ).
+                gv_return_stage = 1.
+              WHEN 'CS'.
+                set_visibility( i_to_hide = 'ID1ID2ID4ID5ID6ID8ID9' ).
+                gv_return_stage = 1.
+            ENDCASE.
         ENDCASE.
       WHEN 'ID8'.
-        gv_return_stage = 1.
+        gv_return_stage = 2.
         set_visibility( i_to_hide = 'ID1ID2ID3ID4ID5ID6ID9' ).
       WHEN 'ID9'.
         gv_return_stage = 1.
@@ -69,9 +77,19 @@ CLASS lcl_visibility_dispenser IMPLEMENTATION.
     ENDCASE.
   ENDMETHOD.                    "make_block_visible
 
+  METHOD adjust_pre_return_action.
+    CASE i_action.
+      WHEN 'ID2'.
+        pre_return_action = 'ABAP'.
+      WHEN 'ID3'.
+        pre_return_action = 'CS'.
+      WHEN OTHERS.
+    ENDCASE.
+  ENDMETHOD.                    "adjust_pre_return_action
+
   METHOD set_visibility.
-    DATA: lt_id_tab  TYPE STANDARD TABLE OF zbmierzwitest3,
-          lwa_id_tab TYPE zbmierzwitest3,
+    DATA: lt_id_tab  TYPE STANDARD TABLE OF zidvalues,
+          lwa_id_tab TYPE zidvalues,
           lv_counter TYPE i VALUE 0,
           lv_one     TYPE string,
           lv_two     TYPE string,
@@ -137,8 +155,8 @@ CLASS lcl_visibility_dispenser IMPLEMENTATION.
   ENDMETHOD.                    "set_visibility
 
   METHOD cut_string.
-    DATA: lt_id_tab  TYPE TABLE OF zbmierzwitest3,
-          lwa_id_tab TYPE zbmierzwitest3.
+    DATA: lt_id_tab  TYPE TABLE OF zidvalues,
+          lwa_id_tab TYPE zidvalues.
     CLEAR lwa_id_tab.
     lwa_id_tab-value = i_to_cut+0(3).
     APPEND lwa_id_tab TO lt_id_tab.
@@ -218,28 +236,28 @@ CLASS lcl_abap_displayer IMPLEMENTATION.
   ENDMETHOD.                    "constructor
 
   METHOD lif_category~add_fact.
-    DATA: lwa_zbmierzwitest TYPE zbmierzwitest,
+    DATA: lwa_zcsfacts TYPE zcsfacts,
           lv_incremented_id TYPE i.
     lv_incremented_id = lif_category~check_last_id( ) + 1.
-    lwa_zbmierzwitest-id       = lv_incremented_id.
-    lwa_zbmierzwitest-title    = p_tit.
-    lwa_zbmierzwitest-category = 'ABAP'.
-    lwa_zbmierzwitest-content  = p_con.
-    INSERT zbmierzwitest FROM lwa_zbmierzwitest.
+    lwa_zcsfacts-id       = lv_incremented_id.
+    lwa_zcsfacts-title    = p_tit.
+    lwa_zcsfacts-category = 'ABAP'.
+    lwa_zcsfacts-content  = p_con.
+    INSERT zcsfacts FROM lwa_zcsfacts.
     IF sy-subrc = 0.
       MESSAGE 'The record has been added.' TYPE 'I'.
     ELSE.
       MESSAGE 'The error has occured.' TYPE 'I'.
     ENDIF.
-  ENDMETHOD.                    "add_abap_fact
+  ENDMETHOD.                    "add_fact
 
   METHOD lif_category~pick_random.
     DATA: lv_random_number TYPE i,
-          lt_fact TYPE zbmierzwitest.
+          lt_fact TYPE zcsfacts.
     lv_random_number = lif_category~generate_random( ).
     CLEAR lt_fact.
     SELECT SINGLE *
-      FROM zbmierzwitest
+      FROM zcsfacts
        INTO lt_fact
         WHERE id = lv_random_number.
     set_wa_fact( i_wa_fact = lt_fact ).
@@ -247,10 +265,10 @@ CLASS lcl_abap_displayer IMPLEMENTATION.
   ENDMETHOD.                    "pick_random_abap
 
   METHOD lif_category~pick_by_id.
-    DATA: lt_fact TYPE zbmierzwitest.
+    DATA: lt_fact TYPE zcsfacts.
     CLEAR lt_fact.
     SELECT SINGLE *
-      FROM zbmierzwitest
+      FROM zcsfacts
         INTO lt_fact
           WHERE id = i_id.
     set_wa_fact( i_wa_fact = lt_fact ).
@@ -260,7 +278,7 @@ CLASS lcl_abap_displayer IMPLEMENTATION.
   METHOD lif_category~check_last_id.
     DATA: lv_latest_id TYPE i.
     SELECT MAX( id )
-      FROM zbmierzwitest
+      FROM zcsfacts
        INTO lv_latest_id.
     IF sy-subrc <> 0.
       r_latest_id = 1.
@@ -270,7 +288,7 @@ CLASS lcl_abap_displayer IMPLEMENTATION.
   ENDMETHOD.                    "check_last_id
 
   METHOD lif_category~display_fact.
-    DATA: lt_fact TYPE STANDARD TABLE OF zbmierzwitest.
+    DATA: lt_fact TYPE STANDARD TABLE OF zcsfacts.
     APPEND wa_fact TO lt_fact.
     o_salv->display_alv( CHANGING c_lt_tab = lt_fact ).
   ENDMETHOD.                    "display_fact
@@ -306,14 +324,14 @@ CLASS lcl_cs_displayer IMPLEMENTATION.
   ENDMETHOD.                    "constructor
 
   METHOD lif_category~add_fact.
-    DATA: lwa_zbmierzwitest TYPE zbmierzwitest,
+    DATA: lwa_zcsfacts TYPE zcsfacts,
           lv_incremented_id TYPE i.
     lv_incremented_id = lif_category~check_last_id( ) + 1.
-    lwa_zbmierzwitest-id       = lv_incremented_id.
-    lwa_zbmierzwitest-title    = p_tit.
-    lwa_zbmierzwitest-category = 'CS'.
-    lwa_zbmierzwitest-content  = p_con.
-    INSERT zbmierzwitest FROM lwa_zbmierzwitest.
+    lwa_zcsfacts-id       = lv_incremented_id.
+    lwa_zcsfacts-title    = p_tit.
+    lwa_zcsfacts-category = 'CS'.
+    lwa_zcsfacts-content  = p_con.
+    INSERT zcsfacts FROM lwa_zcsfacts.
     IF sy-subrc = 0.
       MESSAGE 'The record has been added.' TYPE 'I'.
     ELSE.
@@ -323,11 +341,11 @@ CLASS lcl_cs_displayer IMPLEMENTATION.
 
   METHOD lif_category~pick_random.
     DATA: lv_random_number TYPE i,
-          lt_fact TYPE zbmierzwitest.
+          lt_fact TYPE zcsfacts.
     lv_random_number = lif_category~generate_random( ).
     CLEAR lt_fact.
     SELECT SINGLE *
-      FROM zbmierzwitest
+      FROM zcsfacts
        INTO lt_fact
         WHERE id = lv_random_number.
     set_wa_fact( i_wa_fact = lt_fact ).
@@ -335,10 +353,10 @@ CLASS lcl_cs_displayer IMPLEMENTATION.
   ENDMETHOD.                    "pick_random_abap
 
   METHOD lif_category~pick_by_id.
-    DATA: lt_fact TYPE zbmierzwitest.
+    DATA: lt_fact TYPE zcsfacts.
     CLEAR lt_fact.
     SELECT SINGLE *
-      FROM zbmierzwitest
+      FROM zcsfacts
         INTO lt_fact
           WHERE id = i_id.
     set_wa_fact( i_wa_fact = lt_fact ).
@@ -348,7 +366,7 @@ CLASS lcl_cs_displayer IMPLEMENTATION.
   METHOD lif_category~check_last_id.
     DATA: lv_latest_id TYPE i.
     SELECT MAX( id )
-      FROM zbmierzwitest
+      FROM zcsfacts
        INTO lv_latest_id.
     IF sy-subrc <> 0.
       r_latest_id = 1.
@@ -358,7 +376,7 @@ CLASS lcl_cs_displayer IMPLEMENTATION.
   ENDMETHOD.                    "check_last_id
 
   METHOD lif_category~display_fact.
-    DATA: lt_fact TYPE STANDARD TABLE OF zbmierzwitest.
+    DATA: lt_fact TYPE STANDARD TABLE OF zcsfacts.
     APPEND wa_fact TO lt_fact.
     o_salv->display_alv( CHANGING c_lt_tab = lt_fact ).
   ENDMETHOD.                    "display_fact
@@ -423,7 +441,7 @@ ENDCLASS.                    "lcl_salv IMPLEMENTATION
 CLASS lcl_factory IMPLEMENTATION.
   METHOD provide_object.
     CASE sy-ucomm.
-      WHEN 'FC1' OR'FC16' OR 'FC7' OR 'FC17'.
+      WHEN 'FC16' OR 'FC7' OR 'FC17'.
         DATA(lo_salv) = NEW lcl_salv( ).
         DATA(lo_abap_displayer) = NEW lcl_abap_displayer( i_o_salv = lo_salv ).
         r_o_category = lo_abap_displayer.
