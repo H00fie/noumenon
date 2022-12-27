@@ -56,7 +56,9 @@ INTERFACE lif_category.
              generate_random RETURNING VALUE(r_random) TYPE i,
              pick_by_id IMPORTING i_id TYPE i,
              check_last_id RETURNING VALUE(r_latest_id) TYPE i,
-             display_fact.
+             display_fact,
+             check_category IMPORTING i_randomized_id TYPE i
+                            RETURNING VALUE(r_result) TYPE boolean.
 ENDINTERFACE.                    "lif_category
 
 *----------------------------------------------------------------------*

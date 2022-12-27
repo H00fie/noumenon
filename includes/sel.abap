@@ -83,7 +83,7 @@ SELECTION-SCREEN BEGIN OF BLOCK bk6 WITH FRAME TITLE TEXT-013.
   SELECTION-SCREEN END OF LINE.
 SELECTION-SCREEN END OF BLOCK bk6.
 
-*-------------------------ABAP add record-------------------------*
+*-------------------------Add record-------------------------*
 SELECTION-SCREEN BEGIN OF BLOCK bk7 WITH FRAME TITLE TEXT-015.
   SELECTION-SCREEN BEGIN OF LINE.
     SELECTION-SCREEN COMMENT 1(15) TEXT-016 MODIF ID id8.
@@ -95,7 +95,7 @@ SELECTION-SCREEN BEGIN OF BLOCK bk7 WITH FRAME TITLE TEXT-015.
   SELECTION-SCREEN END OF LINE.
 SELECTION-SCREEN END OF BLOCK bk7.
 
-*-------------------------ABAP display a record by ID-------------------------*
+*-------------------------Display a record by ID-------------------------*
 SELECTION-SCREEN BEGIN OF BLOCK bk8 WITH FRAME TITLE TEXT-019.
   SELECTION-SCREEN BEGIN OF LINE.
     SELECTION-SCREEN COMMENT 1(15) TEXT-020 MODIF ID id9.
