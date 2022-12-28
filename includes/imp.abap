@@ -423,6 +423,97 @@ CLASS lcl_cs_displayer IMPLEMENTATION.
 ENDCLASS.                    "lcl_cs_displayer IMPLEMENTATION
 
 *----------------------------------------------------------------------*
+*       CLASS lcl_java_displayer IMPLEMENTATION
+*----------------------------------------------------------------------*
+*
+*----------------------------------------------------------------------*
+CLASS lcl_java_displayer IMPLEMENTATION.
+  METHOD constructor.
+    me->o_salv = i_o_salv.
+  ENDMETHOD.                    "constructor
+
+  METHOD lif_category~add_fact.
+    DATA: lwa_zbmierzwitest TYPE zbmierzwitest,
+          lv_incremented_id TYPE i.
+    lv_incremented_id = lif_category~check_last_id( ) + 1.
+    lwa_zbmierzwitest-id       = lv_incremented_id.
+    lwa_zbmierzwitest-title    = p_tit.
+    lwa_zbmierzwitest-category = 'JAVA'.
+    lwa_zbmierzwitest-content  = p_con.
+    INSERT zbmierzwitest FROM lwa_zbmierzwitest.
+    IF sy-subrc = 0.
+      MESSAGE 'The record has been added.' TYPE 'I'.
+    ELSE.
+      MESSAGE 'The error has occured.' TYPE 'I'.
+    ENDIF.
+  ENDMETHOD.                    "add_fact
+
+  METHOD lif_category~pick_random.
+    DATA: lv_random_number TYPE i,
+          lt_fact TYPE zbmierzwitest.
+    lv_random_number = lif_category~generate_random( ).
+    CLEAR lt_fact.
+    SELECT SINGLE *
+      FROM zbmierzwitest
+       INTO lt_fact
+        WHERE id = lv_random_number.
+    set_wa_fact( i_wa_fact = lt_fact ).
+    lif_category~display_fact( ).
+  ENDMETHOD.                    "pick_random_abap
+
+  METHOD lif_category~pick_by_id.
+    DATA: lt_fact TYPE zbmierzwitest.
+    CLEAR lt_fact.
+    SELECT SINGLE *
+      FROM zbmierzwitest
+        INTO lt_fact
+          WHERE id = i_id.
+    set_wa_fact( i_wa_fact = lt_fact ).
+    lif_category~display_fact( ).
+  ENDMETHOD.                    "pick_by_id
+
+  METHOD lif_category~check_last_id.
+    DATA: lv_latest_id TYPE i.
+    SELECT MAX( id )
+      FROM zbmierzwitest
+       INTO lv_latest_id.
+    IF sy-subrc <> 0.
+      r_latest_id = 1.
+    ELSE.
+      r_latest_id = lv_latest_id.
+    ENDIF.
+  ENDMETHOD.                    "check_last_id
+
+  METHOD lif_category~display_fact.
+    DATA: lt_fact TYPE STANDARD TABLE OF zbmierzwitest.
+    APPEND wa_fact TO lt_fact.
+    o_salv->display_alv( CHANGING c_lt_tab = lt_fact ).
+  ENDMETHOD.                    "display_fact
+
+  METHOD lif_category~generate_random.
+    DATA lv_result TYPE i.
+    CALL FUNCTION 'RANDOM_I4'
+      EXPORTING
+        RND_MIN         = 1
+        RND_MAX         = 3
+      IMPORTING
+        RND_VALUE       = lv_result.
+    r_random = lv_result.
+  ENDMETHOD.                    "generate_random
+
+  METHOD lif_category~check_category.
+  ENDMETHOD.                    "check_category
+
+  METHOD get_wa_fact.
+    r_wa_fact = wa_fact.
+  ENDMETHOD.                    "get_mt_fact
+
+  METHOD set_wa_fact.
+    wa_fact = i_wa_fact.
+  ENDMETHOD.                    "set_mt_fact
+ENDCLASS.                    "lcl_java_displayer IMPLEMENTATION
+
+*----------------------------------------------------------------------*
 *       CLASS lcl_salv IMPLEMENTATION
 *----------------------------------------------------------------------*
 *
