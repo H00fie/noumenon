@@ -591,6 +591,9 @@ CLASS lcl_factory IMPLEMENTATION.
       WHEN 'FC10'.
         DATA(lo_cs_displayer) = NEW lcl_cs_displayer( i_o_salv = lo_salv ).
         r_o_category = lo_cs_displayer.
+      WHEN 'FC13'.
+        DATA(lo_java_displayer) = NEW lcl_java_displayer( i_o_salv = lo_salv ).
+        r_o_category = lo_java_displayer.
       WHEN 'FC16'.
         CASE gv_program_mode.
           WHEN 'ABAP'.
@@ -650,7 +653,7 @@ CLASS lcl_action_handler IMPLEMENTATION.
           gv_action_to_perform = 'Add'.
         WHEN 'FC16'.
           lo_category->add_fact( ).
-        WHEN 'FC7'.
+        WHEN 'FC7' OR 'FC10' OR 'FC13'.
           lo_category->pick_random( ).
         WHEN 'FC8' OR 'FC11' OR 'FC14'.
           gv_action_to_perform = 'By_id'.
