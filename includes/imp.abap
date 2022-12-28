@@ -237,14 +237,14 @@ CLASS lcl_abap_displayer IMPLEMENTATION.
   ENDMETHOD.                    "constructor
 
   METHOD lif_category~add_fact.
-    DATA: lwa_zcsfacts TYPE zcsfacts,
+    DATA: lwa_zbmierzwitest TYPE zbmierzwitest,
           lv_incremented_id TYPE i.
     lv_incremented_id = lif_category~check_last_id( ) + 1.
-    lwa_zcsfacts-id       = lv_incremented_id.
-    lwa_zcsfacts-title    = p_tit.
-    lwa_zcsfacts-category = 'ABAP'.
-    lwa_zcsfacts-content  = p_con.
-    INSERT zcsfacts FROM lwa_zcsfacts.
+    lwa_zbmierzwitest-id       = lv_incremented_id.
+    lwa_zbmierzwitest-title    = p_tit.
+    lwa_zbmierzwitest-category = 'ABAP'.
+    lwa_zbmierzwitest-content  = p_con.
+    INSERT zbmierzwitest FROM lwa_zbmierzwitest.
     IF sy-subrc = 0.
       MESSAGE 'The record has been added.' TYPE 'I'.
     ELSE.
@@ -254,11 +254,11 @@ CLASS lcl_abap_displayer IMPLEMENTATION.
 
   METHOD lif_category~pick_random.
     DATA: lv_random_number TYPE i,
-          lt_fact TYPE zcsfacts.
+          lt_fact TYPE zbmierzwitest.
     lv_random_number = lif_category~generate_random( ).
     CLEAR lt_fact.
     SELECT SINGLE *
-      FROM zcsfacts
+      FROM zbmierzwitest
        INTO lt_fact
         WHERE id = lv_random_number.
     set_wa_fact( i_wa_fact = lt_fact ).
@@ -266,20 +266,27 @@ CLASS lcl_abap_displayer IMPLEMENTATION.
   ENDMETHOD.                    "pick_random_abap
 
   METHOD lif_category~pick_by_id.
-    DATA: lt_fact TYPE zcsfacts.
-    CLEAR lt_fact.
-    SELECT SINGLE *
-      FROM zcsfacts
-        INTO lt_fact
-          WHERE id = i_id.
-    set_wa_fact( i_wa_fact = lt_fact ).
-    lif_category~display_fact( ).
+    DATA: lt_fact        TYPE zbmierzwitest,
+          lv_if_id_found TYPE boolean.
+    CLEAR: lt_fact,
+           lv_if_id_found.
+    lv_if_id_found = lif_category~check_if_id_exists( i_id_to_check = i_id ).
+    IF lv_if_id_found = abap_false.
+      MESSAGE 'No record of provided ID has been found' TYPE 'I'.
+    ELSE.
+      SELECT SINGLE *
+        FROM zbmierzwitest
+          INTO lt_fact
+            WHERE id = i_id.
+      set_wa_fact( i_wa_fact = lt_fact ).
+      lif_category~display_fact( ).
+    ENDIF.
   ENDMETHOD.                    "pick_by_id
 
   METHOD lif_category~check_last_id.
     DATA: lv_latest_id TYPE i.
     SELECT MAX( id )
-      FROM zcsfacts
+      FROM zbmierzwitest
        INTO lv_latest_id.
     IF sy-subrc <> 0.
       r_latest_id = 1.
@@ -289,7 +296,7 @@ CLASS lcl_abap_displayer IMPLEMENTATION.
   ENDMETHOD.                    "check_last_id
 
   METHOD lif_category~display_fact.
-    DATA: lt_fact TYPE STANDARD TABLE OF zcsfacts.
+    DATA: lt_fact TYPE STANDARD TABLE OF zbmierzwitest.
     APPEND wa_fact TO lt_fact.
     o_salv->display_alv( CHANGING c_lt_tab = lt_fact ).
   ENDMETHOD.                    "display_fact
@@ -312,7 +319,7 @@ CLASS lcl_abap_displayer IMPLEMENTATION.
   METHOD lif_category~check_category.
     DATA: lv_category(4) TYPE c.
     SELECT SINGLE category
-      FROM zcsfacts
+      FROM zbmierzwitest
         INTO lv_category
           WHERE id = i_randomized_id
           AND category = 'ABAP'.
@@ -322,6 +329,19 @@ CLASS lcl_abap_displayer IMPLEMENTATION.
       r_result = abap_false.
     ENDIF.
   ENDMETHOD.                    "check_category
+
+  METHOD lif_category~check_if_id_exists.
+    DATA: lv_found_id TYPE i.
+    SELECT SINGLE id
+      FROM zbmierzwitest
+        INTO lv_found_id
+          WHERE id = i_id_to_check.
+    IF lv_found_id IS NOT INITIAL.
+      r_result = abap_true.
+    ELSE.
+      r_result = abap_false.
+    ENDIF.
+  ENDMETHOD.                    "check_if_id_exists
 
   METHOD get_wa_fact.
     r_wa_fact = wa_fact.
@@ -343,14 +363,14 @@ CLASS lcl_cs_displayer IMPLEMENTATION.
   ENDMETHOD.                    "constructor
 
   METHOD lif_category~add_fact.
-    DATA: lwa_zcsfacts TYPE zcsfacts,
+    DATA: lwa_zbmierzwitest TYPE zbmierzwitest,
           lv_incremented_id TYPE i.
     lv_incremented_id = lif_category~check_last_id( ) + 1.
-    lwa_zcsfacts-id       = lv_incremented_id.
-    lwa_zcsfacts-title    = p_tit.
-    lwa_zcsfacts-category = 'CS'.
-    lwa_zcsfacts-content  = p_con.
-    INSERT zcsfacts FROM lwa_zcsfacts.
+    lwa_zbmierzwitest-id       = lv_incremented_id.
+    lwa_zbmierzwitest-title    = p_tit.
+    lwa_zbmierzwitest-category = 'CS'.
+    lwa_zbmierzwitest-content  = p_con.
+    INSERT zbmierzwitest FROM lwa_zbmierzwitest.
     IF sy-subrc = 0.
       MESSAGE 'The record has been added.' TYPE 'I'.
     ELSE.
@@ -360,11 +380,11 @@ CLASS lcl_cs_displayer IMPLEMENTATION.
 
   METHOD lif_category~pick_random.
     DATA: lv_random_number TYPE i,
-          lt_fact TYPE zcsfacts.
+          lt_fact TYPE zbmierzwitest.
     lv_random_number = lif_category~generate_random( ).
     CLEAR lt_fact.
     SELECT SINGLE *
-      FROM zcsfacts
+      FROM zbmierzwitest
        INTO lt_fact
         WHERE id = lv_random_number.
     set_wa_fact( i_wa_fact = lt_fact ).
@@ -372,10 +392,10 @@ CLASS lcl_cs_displayer IMPLEMENTATION.
   ENDMETHOD.                    "pick_random_abap
 
   METHOD lif_category~pick_by_id.
-    DATA: lt_fact TYPE zcsfacts.
+    DATA: lt_fact TYPE zbmierzwitest.
     CLEAR lt_fact.
     SELECT SINGLE *
-      FROM zcsfacts
+      FROM zbmierzwitest
         INTO lt_fact
           WHERE id = i_id.
     set_wa_fact( i_wa_fact = lt_fact ).
@@ -385,7 +405,7 @@ CLASS lcl_cs_displayer IMPLEMENTATION.
   METHOD lif_category~check_last_id.
     DATA: lv_latest_id TYPE i.
     SELECT MAX( id )
-      FROM zcsfacts
+      FROM zbmierzwitest
        INTO lv_latest_id.
     IF sy-subrc <> 0.
       r_latest_id = 1.
@@ -395,7 +415,7 @@ CLASS lcl_cs_displayer IMPLEMENTATION.
   ENDMETHOD.                    "check_last_id
 
   METHOD lif_category~display_fact.
-    DATA: lt_fact TYPE STANDARD TABLE OF zcsfacts.
+    DATA: lt_fact TYPE STANDARD TABLE OF zbmierzwitest.
     APPEND wa_fact TO lt_fact.
     o_salv->display_alv( CHANGING c_lt_tab = lt_fact ).
   ENDMETHOD.                    "display_fact
@@ -428,6 +448,9 @@ CLASS lcl_cs_displayer IMPLEMENTATION.
       r_result = abap_false.
     ENDIF.
   ENDMETHOD.                    "check_category
+
+  METHOD lif_category~check_if_id_exists.
+  ENDMETHOD.                    "check_if_id_exists
 
   METHOD get_wa_fact.
     r_wa_fact = wa_fact.
@@ -534,6 +557,9 @@ CLASS lcl_java_displayer IMPLEMENTATION.
       r_result = abap_false.
     ENDIF.
   ENDMETHOD.                    "check_category
+
+  METHOD lif_category~check_if_id_exists.
+  ENDMETHOD.                    "check_if_id_exists
 
   METHOD get_wa_fact.
     r_wa_fact = wa_fact.

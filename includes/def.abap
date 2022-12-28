@@ -58,6 +58,8 @@ INTERFACE lif_category.
              check_last_id RETURNING VALUE(r_latest_id) TYPE i,
              display_fact,
              check_category IMPORTING i_randomized_id TYPE i
+                            RETURNING VALUE(r_result) TYPE boolean,
+             check_if_id_exists IMPORTING i_id_to_check TYPE i
                             RETURNING VALUE(r_result) TYPE boolean.
 ENDINTERFACE.                    "lif_category
 
