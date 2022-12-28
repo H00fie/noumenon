@@ -83,7 +83,8 @@ CLASS lcl_visibility_dispenser IMPLEMENTATION.
         pre_return_action = 'ABAP'.
       WHEN 'ID3'.
         pre_return_action = 'CS'.
-      WHEN OTHERS.
+      WHEN 'ID4'.
+        pre_return_action = 'JAVA'.
     ENDCASE.
   ENDMETHOD.                    "adjust_pre_return_action
 
@@ -554,20 +555,35 @@ CLASS lcl_factory IMPLEMENTATION.
   METHOD provide_object.
     DATA(lo_salv) = NEW lcl_salv( ).
     CASE sy-ucomm.
-      WHEN 'FC7' OR 'FC17'.
+      WHEN 'FC7'.
         DATA(lo_abap_displayer) = NEW lcl_abap_displayer( i_o_salv = lo_salv ).
         r_o_category = lo_abap_displayer.
-      WHEN 'FC9'.
+      WHEN 'FC10'.
         DATA(lo_cs_displayer) = NEW lcl_cs_displayer( i_o_salv = lo_salv ).
         r_o_category = lo_cs_displayer.
       WHEN 'FC16'.
-        CASE gv_program_mode_for_add.
+        CASE gv_program_mode.
           WHEN 'ABAP'.
             DATA(lo_abap_displayer2) = NEW lcl_abap_displayer( i_o_salv = lo_salv ).
             r_o_category = lo_abap_displayer2.
           WHEN 'CS'.
             DATA(lo_cs_displayer2) = NEW lcl_cs_displayer( i_o_salv = lo_salv ).
             r_o_category = lo_cs_displayer2.
+          WHEN 'JAVA'.
+            DATA(lo_java_displayer2) = NEW lcl_java_displayer( i_o_salv = lo_salv ).
+            r_o_category = lo_java_displayer2.
+        ENDCASE.
+      WHEN 'FC17'.
+        CASE gv_program_mode.
+          WHEN 'ABAP'.
+            DATA(lo_abap_displayer3) = NEW lcl_abap_displayer( i_o_salv = lo_salv ).
+            r_o_category = lo_abap_displayer3.
+          WHEN 'CS'.
+            DATA(lo_cs_displayer3) = NEW lcl_cs_displayer( i_o_salv = lo_salv ).
+            r_o_category = lo_cs_displayer3.
+          WHEN 'JAVA'.
+            DATA(lo_java_displayer3) = NEW lcl_java_displayer( i_o_salv = lo_salv ).
+            r_o_category = lo_java_displayer3.
         ENDCASE.
     ENDCASE.
   ENDMETHOD.                    "provide_object
@@ -587,19 +603,20 @@ CLASS lcl_action_handler IMPLEMENTATION.
       CASE sy-ucomm.
         WHEN 'FC1'.
           gv_action_to_perform = 'ABAP'.
-          gv_program_mode_for_add = 'ABAP'.
+          gv_program_mode = 'ABAP'.
         WHEN 'FC2'.
           gv_action_to_perform = 'CS'.
-          gv_program_mode_for_add = 'CS'.
+          gv_program_mode = 'CS'.
         WHEN 'FC3'.
           gv_action_to_perform = 'JAVA'.
+          gv_program_mode = 'JAVA'.
         WHEN 'FC4'.
           gv_action_to_perform = 'Kotlin'.
         WHEN 'FC5'.
           gv_action_to_perform = 'All'.
         WHEN 'FC15'.
           gv_action_to_perform = 'Return'.
-        WHEN 'FC6' OR 'FC9'.
+        WHEN 'FC6' OR 'FC9' OR 'FC12'.
           gv_action_to_perform = 'Add'.
         WHEN 'FC16'.
           lo_category->add_fact( ).
