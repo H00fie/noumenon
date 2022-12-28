@@ -401,17 +401,32 @@ CLASS lcl_cs_displayer IMPLEMENTATION.
   ENDMETHOD.                    "display_fact
 
   METHOD lif_category~generate_random.
-    DATA lv_result TYPE i.
-    CALL FUNCTION 'RANDOM_I4'
-      EXPORTING
-        RND_MIN         = 1
-        RND_MAX         = 3
-      IMPORTING
-        RND_VALUE       = lv_result.
+    DATA: lv_result         TYPE i,
+          lv_record_present TYPE boolean VALUE abap_false.
+    WHILE lv_record_present = abap_false.
+        CALL FUNCTION 'RANDOM_I4'
+          EXPORTING
+            RND_MIN         = 1
+            RND_MAX         = 3
+          IMPORTING
+            RND_VALUE       = lv_result.
+      lv_record_present = lif_category~check_category( i_randomized_id = lv_result ).
+    ENDWHILE.
     r_random = lv_result.
   ENDMETHOD.                    "generate_random
-  
+
   METHOD lif_category~check_category.
+    DATA: lv_category(4) TYPE c.
+    SELECT SINGLE category
+      FROM zbmierzwitest
+        INTO lv_category
+          WHERE id = i_randomized_id
+          AND category = 'CS'.
+    IF lv_category IS NOT INITIAL.
+      r_result = abap_true.
+    ELSE.
+      r_result = abap_false.
+    ENDIF.
   ENDMETHOD.                    "check_category
 
   METHOD get_wa_fact.
