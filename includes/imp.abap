@@ -461,11 +461,23 @@ ENDCLASS.                    "lcl_salv IMPLEMENTATION
 *----------------------------------------------------------------------*
 CLASS lcl_factory IMPLEMENTATION.
   METHOD provide_object.
+    DATA(lo_salv) = NEW lcl_salv( ).
     CASE sy-ucomm.
-      WHEN 'FC16' OR 'FC7' OR 'FC17'.
-        DATA(lo_salv) = NEW lcl_salv( ).
+      WHEN 'FC7' OR 'FC17'.
         DATA(lo_abap_displayer) = NEW lcl_abap_displayer( i_o_salv = lo_salv ).
         r_o_category = lo_abap_displayer.
+      WHEN 'FC9'.
+        DATA(lo_cs_displayer) = NEW lcl_cs_displayer( i_o_salv = lo_salv ).
+        r_o_category = lo_cs_displayer.
+      WHEN 'FC16'.
+        CASE gv_program_mode_for_add.
+          WHEN 'ABAP'.
+            DATA(lo_abap_displayer2) = NEW lcl_abap_displayer( i_o_salv = lo_salv ).
+            r_o_category = lo_abap_displayer2.
+          WHEN 'CS'.
+            DATA(lo_cs_displayer2) = NEW lcl_cs_displayer( i_o_salv = lo_salv ).
+            r_o_category = lo_cs_displayer2.
+        ENDCASE.
     ENDCASE.
   ENDMETHOD.                    "provide_object
 ENDCLASS.                    "lcl_factory IMPLEMENTATION
@@ -484,8 +496,10 @@ CLASS lcl_action_handler IMPLEMENTATION.
       CASE sy-ucomm.
         WHEN 'FC1'.
           gv_action_to_perform = 'ABAP'.
+          gv_program_mode_for_add = 'ABAP'.
         WHEN 'FC2'.
           gv_action_to_perform = 'CS'.
+          gv_program_mode_for_add = 'CS'.
         WHEN 'FC3'.
           gv_action_to_perform = 'JAVA'.
         WHEN 'FC4'.
@@ -494,14 +508,14 @@ CLASS lcl_action_handler IMPLEMENTATION.
           gv_action_to_perform = 'All'.
         WHEN 'FC15'.
           gv_action_to_perform = 'Return'.
-        WHEN 'FC6'.
-          gv_action_to_perform = 'ABAP_add'.
+        WHEN 'FC6' OR 'FC9'.
+          gv_action_to_perform = 'Add'.
         WHEN 'FC16'.
           lo_category->add_fact( ).
         WHEN 'FC7'.
           lo_category->pick_random( ).
-        WHEN 'FC8'.
-          gv_action_to_perform = 'ABAP_by_id'.
+        WHEN 'FC8' OR 'FC11'.
+          gv_action_to_perform = 'By_id'.
         WHEN 'FC17'.
           lo_category->pick_by_id( i_id = p_id ).
       ENDCASE.
