@@ -26,7 +26,8 @@ CLASS lcl_visibility_dispenser DEFINITION.
              cut_string     IMPORTING i_to_cut TYPE string
                             EXPORTING e_id_tab TYPE ANY TABLE,
              adjust_pre_return_action IMPORTING i_action TYPE string.
-    DATA: pre_return_action TYPE string.
+    DATA: pre_return_action            TYPE string,
+          str_len_when_back_to_ini_scr TYPE i VALUE 24.
 ENDCLASS.                    "lcl_visibility_dispenser DEFINITION
 
 *----------------------------------------------------------------------*

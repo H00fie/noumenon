@@ -141,7 +141,7 @@ CLASS lcl_visibility_dispenser IMPLEMENTATION.
       ENDCASE.
     ENDLOOP.
     LOOP AT SCREEN.
-      IF strlen( i_to_hide ) = 24.
+      IF strlen( i_to_hide ) = str_len_when_back_to_ini_scr.
         IF screen-group1 = lv_one OR screen-group1 = lv_two OR screen-group1 = lv_three OR screen-group1 = lv_four OR screen-group1 = lv_five OR screen-group1 = lv_six OR screen-group1 = lv_seven OR screen-group1 = lv_eight.
           screen-invisible = '1'.
           screen-input = '0'.
@@ -189,7 +189,7 @@ CLASS lcl_visibility_dispenser IMPLEMENTATION.
     lwa_id_tab-value = i_to_cut+18(3).
     APPEND lwa_id_tab TO lt_id_tab.
     CLEAR lwa_id_tab.
-    IF strlen( i_to_cut ) = 24.
+    IF strlen( i_to_cut ) = str_len_when_back_to_ini_scr.
       lwa_id_tab-value = i_to_cut+21(3).
       APPEND lwa_id_tab TO lt_id_tab.
       CLEAR lwa_id_tab.
