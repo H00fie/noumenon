@@ -522,14 +522,21 @@ CLASS lcl_java_displayer IMPLEMENTATION.
   ENDMETHOD.                    "pick_random_abap
 
   METHOD lif_category~pick_by_id.
-    DATA: lt_fact TYPE zbmierzwitest.
-    CLEAR lt_fact.
-    SELECT SINGLE *
-      FROM zbmierzwitest
-        INTO lt_fact
-          WHERE id = i_id.
-    set_wa_fact( i_wa_fact = lt_fact ).
-    lif_category~display_fact( ).
+    DATA: lt_fact        TYPE zbmierzwitest,
+          lv_if_id_found TYPE boolean.
+    CLEAR: lt_fact,
+           lv_if_id_found.
+    lv_if_id_found = lif_category~check_if_id_exists( i_id_to_check = i_id ).
+    IF lv_if_id_found = abap_false.
+      MESSAGE 'No record of provided ID has been found' TYPE 'I'.
+    ELSE.
+      SELECT SINGLE *
+        FROM zbmierzwitest
+          INTO lt_fact
+            WHERE id = i_id.
+      set_wa_fact( i_wa_fact = lt_fact ).
+      lif_category~display_fact( ).
+    ENDIF.
   ENDMETHOD.                    "pick_by_id
 
   METHOD lif_category~check_last_id.
@@ -580,6 +587,16 @@ CLASS lcl_java_displayer IMPLEMENTATION.
   ENDMETHOD.                    "check_category
 
   METHOD lif_category~check_if_id_exists.
+    DATA: lv_found_id TYPE i.
+    SELECT SINGLE id
+      FROM zbmierzwitest
+        INTO lv_found_id
+          WHERE id = i_id_to_check.
+    IF lv_found_id IS NOT INITIAL.
+      r_result = abap_true.
+    ELSE.
+      r_result = abap_false.
+    ENDIF.
   ENDMETHOD.                    "check_if_id_exists
 
   METHOD get_wa_fact.
