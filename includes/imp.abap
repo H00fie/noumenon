@@ -47,6 +47,7 @@ CLASS lcl_visibility_dispenser IMPLEMENTATION.
         set_visibility( i_to_hide = 'ID1ID2ID4ID5ID6ID8ID9' ).
       WHEN 'ID4'.
         gv_return_stage = 1.
+        adjust_pre_return_action( i_action = 'ID4' ).
         set_visibility( i_to_hide = 'ID1ID2ID3ID5ID6ID8ID9' ).
       WHEN 'ID5'.
         gv_return_stage = 1.
@@ -66,13 +67,16 @@ CLASS lcl_visibility_dispenser IMPLEMENTATION.
               WHEN 'CS'.
                 set_visibility( i_to_hide = 'ID1ID2ID4ID5ID6ID8ID9' ).
                 gv_return_stage = 1.
+              WHEN 'JAVA'.
+                set_visibility( i_to_hide = 'ID1ID2ID3ID5ID6ID8ID9' ).
+                gv_return_stage = 1.
             ENDCASE.
         ENDCASE.
       WHEN 'ID8'.
         gv_return_stage = 2.
         set_visibility( i_to_hide = 'ID1ID2ID3ID4ID5ID6ID9' ).
       WHEN 'ID9'.
-        gv_return_stage = 1.
+        gv_return_stage = 2.
         set_visibility( i_to_hide = 'ID1ID2ID3ID4ID5ID6ID8' ).
     ENDCASE.
   ENDMETHOD.                    "make_block_visible
