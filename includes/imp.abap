@@ -317,8 +317,8 @@ CLASS lcl_abap_displayer IMPLEMENTATION.
     WHILE lv_record_present = abap_false.
         CALL FUNCTION 'RANDOM_I4'
           EXPORTING
-            RND_MIN         = 1
-            RND_MAX         = 10
+            RND_MIN         = gv_random_low
+            RND_MAX         = gv_random_high
           IMPORTING
             RND_VALUE       = lv_result.
       lv_record_present = lif_category~check_category( i_randomized_id = lv_result ).
@@ -443,8 +443,8 @@ CLASS lcl_cs_displayer IMPLEMENTATION.
     WHILE lv_record_present = abap_false.
         CALL FUNCTION 'RANDOM_I4'
           EXPORTING
-            RND_MIN         = 1
-            RND_MAX         = 10
+            RND_MIN         = gv_random_low
+            RND_MAX         = gv_random_high
           IMPORTING
             RND_VALUE       = lv_result.
       lv_record_present = lif_category~check_category( i_randomized_id = lv_result ).
@@ -569,8 +569,8 @@ CLASS lcl_java_displayer IMPLEMENTATION.
     WHILE lv_record_present = abap_false.
         CALL FUNCTION 'RANDOM_I4'
           EXPORTING
-            RND_MIN         = 1
-            RND_MAX         = 10
+            RND_MIN         = gv_random_low
+            RND_MAX         = gv_random_high
           IMPORTING
             RND_VALUE       = lv_result.
       lv_record_present = lif_category~check_category( i_randomized_id = lv_result ).
@@ -695,8 +695,8 @@ CLASS lcl_kotlin_displayer IMPLEMENTATION.
     WHILE lv_record_present = abap_false.
         CALL FUNCTION 'RANDOM_I4'
           EXPORTING
-            RND_MIN         = 1
-            RND_MAX         = 10
+            RND_MIN         = gv_random_low
+            RND_MAX         = gv_random_high
           IMPORTING
             RND_VALUE       = lv_result.
       lv_record_present = lif_category~check_category( i_randomized_id = lv_result ).
