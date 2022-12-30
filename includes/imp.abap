@@ -745,6 +745,118 @@ CLASS lcl_kotlin_displayer IMPLEMENTATION.
 ENDCLASS.                    "lcl_kotlin_displayer IMPLEMENTATION
 
 *----------------------------------------------------------------------*
+*       CLASS lcl_all_displayer IMPLEMENTATION
+*----------------------------------------------------------------------*
+*
+*----------------------------------------------------------------------*
+CLASS lcl_all_displayer IMPLEMENTATION.
+  METHOD constructor.
+    me->o_salv = i_o_salv.
+  ENDMETHOD.                    "constructor
+
+  METHOD lif_category~add_fact.
+  ENDMETHOD.                    "add_fact
+
+  METHOD lif_category~pick_random.
+    DATA: lv_random_number TYPE i,
+          lt_fact TYPE zbmierzwitest.
+    lv_random_number = lif_category~generate_random( ).
+    CLEAR lt_fact.
+    SELECT SINGLE *
+      FROM zbmierzwitest
+       INTO lt_fact
+        WHERE id = lv_random_number.
+    set_wa_fact( i_wa_fact = lt_fact ).
+    lif_category~display_fact( ).
+  ENDMETHOD.                    "pick_random_abap
+
+  METHOD lif_category~pick_by_id.
+    DATA: lt_fact        TYPE zbmierzwitest,
+          lv_if_id_found TYPE boolean.
+    CLEAR: lt_fact,
+           lv_if_id_found.
+    lv_if_id_found = lif_category~check_if_id_exists( i_id_to_check = i_id ).
+    IF lv_if_id_found = abap_false.
+      MESSAGE 'No record of provided ID has been found across all categories.' TYPE 'I'.
+    ELSE.
+      SELECT SINGLE *
+        FROM zbmierzwitest
+          INTO lt_fact
+            WHERE id = i_id.
+      set_wa_fact( i_wa_fact = lt_fact ).
+      lif_category~display_fact( ).
+    ENDIF.
+  ENDMETHOD.                    "pick_by_id
+
+  METHOD lif_category~check_last_id.
+    DATA: lv_latest_id TYPE i.
+    SELECT MAX( id )
+      FROM zbmierzwitest
+       INTO lv_latest_id.
+    IF sy-subrc <> 0.
+      r_latest_id = 1.
+    ELSE.
+      r_latest_id = lv_latest_id.
+    ENDIF.
+  ENDMETHOD.                    "check_last_id
+
+  METHOD lif_category~display_fact.
+    DATA: lt_fact TYPE STANDARD TABLE OF zbmierzwitest.
+    APPEND wa_fact TO lt_fact.
+    o_salv->display_alv( CHANGING c_lt_tab = lt_fact ).
+  ENDMETHOD.                    "display_fact
+
+  METHOD lif_category~generate_random.
+    DATA: lv_result         TYPE i,
+          lv_record_present TYPE boolean VALUE abap_false.
+    WHILE lv_record_present = abap_false.
+        CALL FUNCTION 'RANDOM_I4'
+          EXPORTING
+            RND_MIN         = gv_random_low
+            RND_MAX         = gv_random_high
+          IMPORTING
+            RND_VALUE       = lv_result.
+      lv_record_present = lif_category~check_category( i_randomized_id = lv_result ).
+    ENDWHILE.
+    r_random = lv_result.
+  ENDMETHOD.                    "generate_random
+
+  METHOD lif_category~check_category.
+    DATA: lv_category(4) TYPE c.
+    SELECT SINGLE category
+      FROM zbmierzwitest
+        INTO lv_category
+          WHERE id = i_randomized_id.
+    IF lv_category IS NOT INITIAL.
+      r_result = abap_true.
+    ELSE.
+      r_result = abap_false.
+    ENDIF.
+  ENDMETHOD.                    "check_category
+
+  METHOD lif_category~check_if_id_exists.
+    DATA: lv_found_id TYPE i.
+    SELECT SINGLE id
+      FROM zbmierzwitest
+        INTO lv_found_id
+          WHERE id = i_id_to_check.
+    IF lv_found_id IS NOT INITIAL.
+      r_result = abap_true.
+    ELSE.
+      r_result = abap_false.
+    ENDIF.
+  ENDMETHOD.                    "check_if_id_exists
+
+  METHOD get_wa_fact.
+    r_wa_fact = wa_fact.
+  ENDMETHOD.                    "get_mt_fact
+
+  METHOD set_wa_fact.
+    wa_fact = i_wa_fact.
+  ENDMETHOD.                    "set_mt_fact
+ENDCLASS.                    "lcl_all_displayer IMPLEMENTATION
+
+*----------------------------------------------------------------------*
 *       CLASS lcl_salv IMPLEMENTATION
 *----------------------------------------------------------------------*
 *
@@ -794,6 +906,12 @@ CLASS lcl_factory IMPLEMENTATION.
       WHEN 'FC13'.
         DATA(lo_java_displayer) = NEW lcl_java_displayer( i_o_salv = lo_salv ).
         r_o_category = lo_java_displayer.
+      WHEN 'FC19'.
+        DATA(lo_kotlin_displayer) = NEW lcl_kotlin_displayer( i_o_salv = lo_salv ).
+        r_o_category = lo_kotlin_displayer.
+      WHEN 'FC21'.
+        DATA(lo_all_displayer) = NEW lcl_all_displayer( i_o_salv = lo_salv ).
+        r_o_category = lo_all_displayer.
       WHEN 'FC16'.
         CASE gv_program_mode.
           WHEN 'ABAP'.
@@ -805,6 +923,9 @@ CLASS lcl_factory IMPLEMENTATION.
           WHEN 'JAVA'.
             DATA(lo_java_displayer2) = NEW lcl_java_displayer( i_o_salv = lo_salv ).
             r_o_category = lo_java_displayer2.
+          WHEN 'Kotlin'.
+            DATA(lo_kotlin_displayer2) = NEW lcl_kotlin_displayer( i_o_salv = lo_salv ).
+            r_o_category = lo_kotlin_displayer2.
         ENDCASE.
       WHEN 'FC17'.
         CASE gv_program_mode.
@@ -817,6 +938,9 @@ CLASS lcl_factory IMPLEMENTATION.
           WHEN 'JAVA'.
             DATA(lo_java_displayer3) = NEW lcl_java_displayer( i_o_salv = lo_salv ).
             r_o_category = lo_java_displayer3.
+          WHEN 'Kotlin'.
+            DATA(lo_kotlin_displayer3) = NEW lcl_kotlin_displayer( i_o_salv = lo_salv ).
+            r_o_category = lo_kotlin_displayer3.
         ENDCASE.
     ENDCASE.
   ENDMETHOD.                    "provide_object

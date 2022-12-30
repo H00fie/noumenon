@@ -149,6 +149,22 @@ CLASS lcl_kotlin_displayer DEFINITION.
 ENDCLASS.                    "lcl_kotlin_displayer DEFINITION
 
 *----------------------------------------------------------------------*
+*       CLASS lcl_all_displayer DEFINITION
+*----------------------------------------------------------------------*
+*
+*----------------------------------------------------------------------*
+CLASS lcl_all_displayer DEFINITION.
+  PUBLIC SECTION.
+    METHODS: constructor IMPORTING i_o_salv TYPE REF TO lcl_salv.
+    INTERFACES: lif_category.
+  PRIVATE SECTION.
+    METHODS: get_wa_fact RETURNING VALUE(r_wa_fact) TYPE zcsfacts,
+             set_wa_fact IMPORTING i_wa_fact TYPE zcsfacts.
+    DATA: wa_fact TYPE zcsfacts,
+          o_salv  TYPE REF TO lcl_salv.
+ENDCLASS.                    "lcl_all_displayer DEFINITION
+
+*----------------------------------------------------------------------*
 *       CLASS lcl_factory DEFINITION
 *----------------------------------------------------------------------*
 *
