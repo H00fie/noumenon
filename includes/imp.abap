@@ -458,8 +458,8 @@ CLASS lcl_cs_displayer IMPLEMENTATION.
     WHILE lv_record_present = abap_false.
         CALL FUNCTION 'RANDOM_I4'
           EXPORTING
-            RND_MIN         = gv_random_low
-            RND_MAX         = gv_random_high
+            RND_MIN         = 1
+            RND_MAX         = lif_category~check_the_number_of_records( )
           IMPORTING
             RND_VALUE       = lv_result.
       lv_record_present = lif_category~check_category( i_randomized_id = lv_result ).
@@ -494,6 +494,14 @@ CLASS lcl_cs_displayer IMPLEMENTATION.
       r_result = abap_false.
     ENDIF.
   ENDMETHOD.                    "check_if_id_exists
+
+  METHOD lif_category~check_the_number_of_records.
+    DATA: lv_num_of_records TYPE i.
+    SELECT COUNT( * )
+      FROM zbmierzwitest
+        INTO lv_num_of_records.
+    r_num_of_records = lv_num_of_records.
+  ENDMETHOD.                    "check_the_number_of_records
 
   METHOD get_wa_fact.
     r_wa_fact = wa_fact.
@@ -585,8 +593,8 @@ CLASS lcl_java_displayer IMPLEMENTATION.
     WHILE lv_record_present = abap_false.
         CALL FUNCTION 'RANDOM_I4'
           EXPORTING
-            RND_MIN         = gv_random_low
-            RND_MAX         = gv_random_high
+            RND_MIN         = 1
+            RND_MAX         = lif_category~check_the_number_of_records( )
           IMPORTING
             RND_VALUE       = lv_result.
       lv_record_present = lif_category~check_category( i_randomized_id = lv_result ).
@@ -621,6 +629,14 @@ CLASS lcl_java_displayer IMPLEMENTATION.
       r_result = abap_false.
     ENDIF.
   ENDMETHOD.                    "check_if_id_exists
+
+  METHOD lif_category~check_the_number_of_records.
+    DATA: lv_num_of_records TYPE i.
+    SELECT COUNT( * )
+      FROM zbmierzwitest
+        INTO lv_num_of_records.
+    r_num_of_records = lv_num_of_records.
+  ENDMETHOD.                    "check_the_number_of_records
 
   METHOD get_wa_fact.
     r_wa_fact = wa_fact.
@@ -712,8 +728,8 @@ CLASS lcl_kotlin_displayer IMPLEMENTATION.
     WHILE lv_record_present = abap_false.
         CALL FUNCTION 'RANDOM_I4'
           EXPORTING
-            RND_MIN         = gv_random_low
-            RND_MAX         = gv_random_high
+            RND_MIN         = 1
+            RND_MAX         = lif_category~check_the_number_of_records( )
           IMPORTING
             RND_VALUE       = lv_result.
       lv_record_present = lif_category~check_category( i_randomized_id = lv_result ).
@@ -748,6 +764,14 @@ CLASS lcl_kotlin_displayer IMPLEMENTATION.
       r_result = abap_false.
     ENDIF.
   ENDMETHOD.                    "check_if_id_exists
+
+  METHOD lif_category~check_the_number_of_records.
+    DATA: lv_num_of_records TYPE i.
+    SELECT COUNT( * )
+      FROM zbmierzwitest
+        INTO lv_num_of_records.
+    r_num_of_records = lv_num_of_records.
+  ENDMETHOD.                    "check_the_number_of_records
 
   METHOD get_wa_fact.
     r_wa_fact = wa_fact.
@@ -826,8 +850,8 @@ CLASS lcl_all_displayer IMPLEMENTATION.
     WHILE lv_record_present = abap_false.
         CALL FUNCTION 'RANDOM_I4'
           EXPORTING
-            RND_MIN         = gv_random_low
-            RND_MAX         = gv_random_high
+            RND_MIN         = 1
+            RND_MAX         = lif_category~check_the_number_of_records( )
           IMPORTING
             RND_VALUE       = lv_result.
       lv_record_present = lif_category~check_category( i_randomized_id = lv_result ).
@@ -860,6 +884,14 @@ CLASS lcl_all_displayer IMPLEMENTATION.
       r_result = abap_false.
     ENDIF.
   ENDMETHOD.                    "check_if_id_exists
+
+  METHOD lif_category~check_the_number_of_records.
+    DATA: lv_num_of_records TYPE i.
+    SELECT COUNT( * )
+      FROM zbmierzwitest
+        INTO lv_num_of_records.
+    r_num_of_records = lv_num_of_records.
+  ENDMETHOD.                    "check_the_number_of_records
 
   METHOD get_wa_fact.
     r_wa_fact = wa_fact.
