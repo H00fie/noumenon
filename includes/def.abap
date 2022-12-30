@@ -61,7 +61,8 @@ INTERFACE lif_category.
              check_category IMPORTING i_randomized_id TYPE i
                             RETURNING VALUE(r_result) TYPE boolean,
              check_if_id_exists IMPORTING i_id_to_check TYPE i
-                            RETURNING VALUE(r_result) TYPE boolean.
+                            RETURNING VALUE(r_result) TYPE boolean,
+             check_the_number_of_records RETURNING VALUE(r_num_of_records) TYPE i.
 ENDINTERFACE.                    "lif_category
 
 *----------------------------------------------------------------------*
