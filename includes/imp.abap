@@ -282,7 +282,7 @@ CLASS lcl_abap_displayer IMPLEMENTATION.
            lv_if_id_found.
     lv_if_id_found = lif_category~check_if_id_exists( i_id_to_check = i_id ).
     IF lv_if_id_found = abap_false.
-      MESSAGE 'No record of provided ID has been found' TYPE 'I'.
+      MESSAGE 'No record of provided ID has been found in ABAP category.' TYPE 'I'.
     ELSE.
       SELECT SINGLE *
         FROM zbmierzwitest
@@ -345,7 +345,8 @@ CLASS lcl_abap_displayer IMPLEMENTATION.
     SELECT SINGLE id
       FROM zbmierzwitest
         INTO lv_found_id
-          WHERE id = i_id_to_check.
+          WHERE id = i_id_to_check
+		  AND category = 'ABAP'.
     IF lv_found_id IS NOT INITIAL.
       r_result = abap_true.
     ELSE.
@@ -408,7 +409,7 @@ CLASS lcl_cs_displayer IMPLEMENTATION.
            lv_if_id_found.
     lv_if_id_found = lif_category~check_if_id_exists( i_id_to_check = i_id ).
     IF lv_if_id_found = abap_false.
-      MESSAGE 'No record of provided ID has been found' TYPE 'I'.
+      MESSAGE 'No record of provided ID has been found in CS category.' TYPE 'I'.
     ELSE.
       SELECT SINGLE *
         FROM zbmierzwitest
@@ -471,7 +472,8 @@ CLASS lcl_cs_displayer IMPLEMENTATION.
     SELECT SINGLE id
       FROM zbmierzwitest
         INTO lv_found_id
-          WHERE id = i_id_to_check.
+          WHERE id = i_id_to_check
+		  AND category = 'CS'.
     IF lv_found_id IS NOT INITIAL.
       r_result = abap_true.
     ELSE.
@@ -534,7 +536,7 @@ CLASS lcl_java_displayer IMPLEMENTATION.
            lv_if_id_found.
     lv_if_id_found = lif_category~check_if_id_exists( i_id_to_check = i_id ).
     IF lv_if_id_found = abap_false.
-      MESSAGE 'No record of provided ID has been found' TYPE 'I'.
+      MESSAGE 'No record of provided ID has been found in JAVA category.' TYPE 'I'.
     ELSE.
       SELECT SINGLE *
         FROM zbmierzwitest
@@ -597,7 +599,8 @@ CLASS lcl_java_displayer IMPLEMENTATION.
     SELECT SINGLE id
       FROM zbmierzwitest
         INTO lv_found_id
-          WHERE id = i_id_to_check.
+          WHERE id = i_id_to_check
+		  AND category = 'JAVA'.
     IF lv_found_id IS NOT INITIAL.
       r_result = abap_true.
     ELSE.
@@ -660,7 +663,7 @@ CLASS lcl_kotlin_displayer IMPLEMENTATION.
            lv_if_id_found.
     lv_if_id_found = lif_category~check_if_id_exists( i_id_to_check = i_id ).
     IF lv_if_id_found = abap_false.
-      MESSAGE 'No record of provided ID has been found' TYPE 'I'.
+      MESSAGE 'No record of provided ID has been found in Kotlin category.' TYPE 'I'.
     ELSE.
       SELECT SINGLE *
         FROM zbmierzwitest
@@ -723,7 +726,8 @@ CLASS lcl_kotlin_displayer IMPLEMENTATION.
     SELECT SINGLE id
       FROM zbmierzwitest
         INTO lv_found_id
-          WHERE id = i_id_to_check.
+          WHERE id = i_id_to_check
+		  AND category = 'Kotlin'.
     IF lv_found_id IS NOT INITIAL.
       r_result = abap_true.
     ELSE.
