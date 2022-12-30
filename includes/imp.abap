@@ -55,6 +55,7 @@ CLASS lcl_visibility_dispenser IMPLEMENTATION.
         set_visibility( i_to_hide = 'ID1ID2ID3ID4ID6ID8ID9' ).
       WHEN 'ID6'.
         gv_return_stage = 1.
+        adjust_pre_return_action( i_action = 'ID6' ).
         set_visibility( i_to_hide = 'ID1ID2ID3ID4ID5ID8ID9' ).
       WHEN 'ID7'.
         CASE gv_return_stage.
@@ -73,6 +74,9 @@ CLASS lcl_visibility_dispenser IMPLEMENTATION.
                 gv_return_stage = 1.
               WHEN 'Kotlin'.
                 set_visibility( i_to_hide = 'ID1ID2ID3ID4ID6ID8ID9' ).
+                gv_return_stage = 1.
+              WHEN 'All'.
+                set_visibility( i_to_hide = 'ID1ID2ID3ID4ID5ID8ID9' ).
                 gv_return_stage = 1.
             ENDCASE.
         ENDCASE.
@@ -95,12 +99,14 @@ CLASS lcl_visibility_dispenser IMPLEMENTATION.
         pre_return_action = 'JAVA'.
       WHEN 'ID5'.
         pre_return_action = 'Kotlin'.
+      WHEN 'ID6'.
+        pre_return_action = 'All'.
     ENDCASE.
   ENDMETHOD.                    "adjust_pre_return_action
 
   METHOD set_visibility.
-    DATA: lt_id_tab  TYPE STANDARD TABLE OF zidvalues,
-          lwa_id_tab TYPE zidvalues,
+    DATA: lt_id_tab  TYPE STANDARD TABLE OF zbmierzwitest3,
+          lwa_id_tab TYPE zbmierzwitest3,
           lv_counter TYPE i VALUE 0,
           lv_one     TYPE string,
           lv_two     TYPE string,
@@ -166,8 +172,8 @@ CLASS lcl_visibility_dispenser IMPLEMENTATION.
   ENDMETHOD.                    "set_visibility
 
   METHOD cut_string.
-    DATA: lt_id_tab  TYPE TABLE OF zidvalues,
-          lwa_id_tab TYPE zidvalues.
+    DATA: lt_id_tab  TYPE TABLE OF zbmierzwitest3,
+          lwa_id_tab TYPE zbmierzwitest3.
     CLEAR lwa_id_tab.
     lwa_id_tab-value = i_to_cut+0(3).
     APPEND lwa_id_tab TO lt_id_tab.
@@ -941,6 +947,9 @@ CLASS lcl_factory IMPLEMENTATION.
           WHEN 'Kotlin'.
             DATA(lo_kotlin_displayer3) = NEW lcl_kotlin_displayer( i_o_salv = lo_salv ).
             r_o_category = lo_kotlin_displayer3.
+          WHEN 'All'.
+            DATA(lo_all_displayer2) = NEW lcl_all_displayer( i_o_salv = lo_salv ).
+            r_o_category = lo_all_displayer2.
         ENDCASE.
     ENDCASE.
   ENDMETHOD.                    "provide_object
@@ -969,17 +978,19 @@ CLASS lcl_action_handler IMPLEMENTATION.
           gv_program_mode = 'JAVA'.
         WHEN 'FC4'.
           gv_action_to_perform = 'Kotlin'.
+          gv_program_mode = 'Kotlin'.
         WHEN 'FC5'.
           gv_action_to_perform = 'All'.
+          gv_program_mode = 'All'.
         WHEN 'FC15'.
           gv_action_to_perform = 'Return'.
-        WHEN 'FC6' OR 'FC9' OR 'FC12'.
+        WHEN 'FC6' OR 'FC9' OR 'FC12' OR 'FC18'.
           gv_action_to_perform = 'Add'.
         WHEN 'FC16'.
           lo_category->add_fact( ).
-        WHEN 'FC7' OR 'FC10' OR 'FC13'.
+        WHEN 'FC7' OR 'FC10' OR 'FC13' OR 'FC19' OR 'FC21'.
           lo_category->pick_random( ).
-        WHEN 'FC8' OR 'FC11' OR 'FC14'.
+        WHEN 'FC8' OR 'FC11' OR 'FC14' OR 'FC20' OR 'FC22'.
           gv_action_to_perform = 'By_id'.
         WHEN 'FC17'.
           lo_category->pick_by_id( i_id = p_id ).
