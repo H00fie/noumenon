@@ -792,9 +792,6 @@ CLASS lcl_all_displayer IMPLEMENTATION.
     me->o_salv = i_o_salv.
   ENDMETHOD.                    "constructor
 
-  METHOD lif_category~add_fact.
-  ENDMETHOD.                    "add_fact
-
   METHOD lif_category~pick_random.
     DATA: lv_random_number TYPE i,
           lt_fact TYPE zbmierzwitest.

@@ -52,7 +52,7 @@ ENDCLASS.                    "lcl_screen_adjuster DEFINITION
 *
 *----------------------------------------------------------------------*
 INTERFACE lif_category.
-    METHODS: add_fact,
+    METHODS: add_fact DEFAULT IGNORE,
              pick_random,
              generate_random RETURNING VALUE(r_random) TYPE i,
              pick_by_id IMPORTING i_id TYPE i,
