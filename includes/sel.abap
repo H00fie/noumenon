@@ -134,3 +134,7 @@ SELECTION-SCREEN END OF LINE.
 *015 - ABAP - add a new record
 *016 - Title
 *017 - Content
+*018 - Add
+*019 - Select by id
+*020 - Record's ID
+*021 - Display record
