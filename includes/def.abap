@@ -188,3 +188,16 @@ CLASS lcl_action_handler DEFINITION.
   PRIVATE SECTION.
     DATA: lo_category TYPE REF TO lif_category.
 ENDCLASS.                     "lcl_action_handler DEFINITION
+
+*TO BE INCLUDED WITHIN THE DATA DICTIONARY
+*        TABLE'S NAME: 'ZCSFACTS'
+*Component    Typing Method   Component Type
+*   ID            TYPE            INT8
+*CATEGORY         TYPE            CHAR
+* TITLE           TYPE           STRING
+* CONTENT         TYPE           STRING
+
+*TO BE INCLUDED WITHIN THE DATA DICTIONARY
+*       TABLE'S NAME: 'ZIDVALUES'
+*Component    Typing Method   Component Type
+*  VALUE          TYPE           STRING
